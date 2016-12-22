@@ -20,6 +20,8 @@ Rsync installed both locally and remotely
 This extension contributes the following settings:
 
 * `sync-rsync.remote`: the rsync remote location e.g. user@remote:path
+* `sync-rsync.delete`: true or false if you want rsync to delete files
+* `sync-rsync.flags`: rsync flags
 
 ### 0.4.1
 
