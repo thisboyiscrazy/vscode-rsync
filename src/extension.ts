@@ -42,7 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
 
         out.show();
 
-        let r = new rsync().flags('rlptzv')
+        let r = new rsync().flags('rlptzv').progress()
 
         if(down) {
             r = r.source(remote).destination(local);
@@ -50,6 +50,10 @@ export function activate(context: vscode.ExtensionContext) {
         } else {
             r = r.source(local).destination(remote);
             vscode.window.showInformationMessage('Sync - Rsync: Syncing Local to Remote');
+        }
+
+        if(config.get('delete',false)) {
+            r = r.delete()
         }
 
         r.execute(

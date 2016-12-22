@@ -2,12 +2,11 @@
     "name": "sync-rsync",
     "displayName": "Sync - Rsync",
     "description": "Sync with remote using rsync",
-    "version": "0.1.0",
-    "publisher": "vscode-ext",
-    "repository" :
-    {
-        "type" : "git",
-        "url" : "https://github.com/thisboyiscrazy/vscode-rsync"
+    "version": "0.1.1",
+    "publisher": "thisboyiscrazy",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/thisboyiscrazy/vscode-rsync"
     },
     "engines": {
         "vscode": "^1.5.0"
@@ -38,6 +37,11 @@
                     "type": "string",
                     "default": null,
                     "description": "Remote Location (user@host:path)"
+                },
+                "sync-rsync.delete": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Delete false during sync"
                 }
             }
         }
