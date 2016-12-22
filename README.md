@@ -21,6 +21,10 @@ This extension contributes the following settings:
 
 * `sync-rsync.remote`: the rsync remote location e.g. user@remote:path
 
+### 0.4.1
+
+Added ability to delete and specify flags
+
 ### 0.1.0
 
 Initial release
