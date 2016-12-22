@@ -42,14 +42,12 @@ export function activate(context: vscode.ExtensionContext) {
 
         out.show();
 
-        let r = new rsync().flags('rlptzv').progress()
+        let r = new rsync().flags(config.get('flags','rlptzv')).progress()
 
         if(down) {
             r = r.source(remote).destination(local);
-            vscode.window.showInformationMessage('Sync - Rsync: Syncing Remote to Local');
         } else {
             r = r.source(local).destination(remote);
-            vscode.window.showInformationMessage('Sync - Rsync: Syncing Local to Remote');
         }
 
         if(config.get('delete',false)) {
@@ -61,7 +59,6 @@ export function activate(context: vscode.ExtensionContext) {
                 if(error) {
                     vscode.window.showErrorMessage(error.message);
                 } else {
-                    vscode.window.showInformationMessage('Done');
                     out.hide();
                 }
             },

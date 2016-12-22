@@ -42,6 +42,11 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Delete false during sync"
+                },
+                "sync-rsync.flags": {
+                    "type": "string",
+                    "default": "rlptzv",
+                    "description": "Rsync Flags"
                 }
             }
         }
