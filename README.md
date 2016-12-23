@@ -23,6 +23,10 @@ This extension contributes the following settings:
 * `sync-rsync.delete`: true or false if you want rsync to delete files
 * `sync-rsync.flags`: rsync flags
 
+### 0.5.1
+
+Exclude patterns
+
 ### 0.4.1
 
 Added ability to delete and specify flags

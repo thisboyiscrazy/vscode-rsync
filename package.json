@@ -47,6 +47,15 @@
                     "type": "string",
                     "default": "rlptzv",
                     "description": "Rsync Flags"
+                },
+                "sync-rsync.exclude": {
+                    "type": "array",
+                    "default": [".git",".vscode"],
+                    "description": "Rsync exclude patterns",
+                    "items":{
+                        "type":"string",
+                        "title":"Rsync exclude pattern"
+                    }
                 }
             }
         }

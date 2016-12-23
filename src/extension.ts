@@ -40,9 +40,11 @@ export function activate(context: vscode.ExtensionContext) {
 
         remote = remote + '/';
 
+        let exclude = config.get('exclude',[".git",".vscode"]);
+
         out.show();
 
-        let r = new rsync().flags(config.get('flags','rlptzv')).progress()
+        let r = new rsync().flags(config.get('flags','rlptzv')).exclude(exclude).progress();
 
         if(down) {
             r = r.source(remote).destination(local);
