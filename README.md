@@ -22,6 +22,7 @@ This extension contributes the following settings:
 * `sync-rsync.remote`: the rsync remote location e.g. user@remote:path
 * `sync-rsync.delete`: true or false if you want rsync to delete files
 * `sync-rsync.flags`: rsync flags
+* `sync-rsync.exclude`: rsync exclude patterns e.g.  [".git",".vscode"]
 
 ### 0.5.1
 
