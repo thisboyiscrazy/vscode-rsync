@@ -23,6 +23,11 @@ This extension contributes the following settings:
 * `sync-rsync.delete`: true or false if you want rsync to delete files
 * `sync-rsync.flags`: rsync flags
 * `sync-rsync.exclude`: rsync exclude patterns e.g.  [".git",".vscode"]
+* `sync-rsync.onSave`: sync project on save (currently syncs entire project because I do have an easy way to deal with excluded files)
+
+### 0.6.0
+
+Sync on save
 
 ### 0.5.1
 

@@ -2,7 +2,7 @@
     "name": "sync-rsync",
     "displayName": "Sync - Rsync",
     "description": "Sync with remote using rsync",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "publisher": "vscode-ext",
     "repository": {
         "type": "git",
@@ -59,6 +59,11 @@
                         "type": "string",
                         "title": "Rsync exclude pattern"
                     }
+                },
+                "sync-rsync.onSave": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Sync File on Save"
                 }
             }
         }
