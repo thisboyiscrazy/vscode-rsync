@@ -1,88 +1,87 @@
 {
-    "name": "sync-rsync",
-    "displayName": "Sync - Rsync",
-    "description": "Sync with remote using rsync",
-    "version": "0.6.0",
-    "publisher": "vscode-ext",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/thisboyiscrazy/vscode-rsync"
-    },
-    "engines": {
-        "vscode": "^1.5.0"
-    },
-    "categories": [
-        "Other"
+  "name": "sync-rsync",
+  "displayName": "Sync - Rsync",
+  "description": "Sync with remote using rsync",
+  "version": "0.6.0",
+  "publisher": "vscode-ext",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thisboyiscrazy/vscode-rsync"
+  },
+  "engines": {
+    "vscode": "^1.5.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./out/src/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "sync-rsync.syncDown",
+        "title": "Sync - Rsync: Remote to Local"
+      },
+      {
+        "command": "sync-rsync.syncUp",
+        "title": "Sync - Rsync: Local to Remote"
+      }
     ],
-    "activationEvents": [
-        "*"
-    ],
-    "main": "./out/src/extension",
-    "contributes": {
-        "commands": [
-            {
-                "command": "sync-rsync.syncDown",
-                "title": "Sync - Rsync: Remote to Local"
-            },
-            {
-                "command": "sync-rsync.syncUp",
-                "title": "Sync - Rsync: Local to Remote"
-            }
-        ],
-        "configuration": {
-            "type": "object",
-            "title": "Sync - Rsync configuration",
-            "properties": {
-                "sync-rsync.remote": {
-                    "type": "string",
-                    "default": null,
-                    "description": "Remote Location (user@host:path)"
-                },
-                "sync-rsync.delete": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Delete false during sync"
-                },
-                "sync-rsync.flags": {
-                    "type": "string",
-                    "default": "rlptzv",
-                    "description": "Rsync Flags"
-                },
-                "sync-rsync.exclude": {
-                    "type": "array",
-                    "default": [
-                        ".git",
-                        ".vscode"
-                    ],
-                    "description": "Rsync exclude patterns",
-                    "items": {
-                        "type": "string",
-                        "title": "Rsync exclude pattern"
-                    }
-                },
-                "sync-rsync.onSave": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Sync File on Save"
-                }
-            }
+    "configuration": {
+      "type": "object",
+      "title": "Sync - Rsync configuration",
+      "properties": {
+        "sync-rsync.remote": {
+          "type": "string",
+          "default": null,
+          "description": "Remote Location (user@host:path)"
+        },
+        "sync-rsync.delete": {
+          "type": "boolean",
+          "default": false,
+          "description": "Delete false during sync"
+        },
+        "sync-rsync.flags": {
+          "type": "string",
+          "default": "rlptzv",
+          "description": "Rsync Flags"
+        },
+        "sync-rsync.exclude": {
+          "type": "array",
+          "default": [
+            ".git",
+            ".vscode"
+          ],
+          "description": "Rsync exclude patterns",
+          "items": {
+            "type": "string",
+            "title": "Rsync exclude pattern"
+          }
+        },
+        "sync-rsync.onSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "Sync File on Save"
         }
-    },
-    "scripts": {
-        "vscode:prepublish": "tsc -p ./",
-        "compile": "tsc -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install",
-        "test": "node ./node_modules/vscode/bin/test"
-    },
-    "devDependencies": {
-        "typescript": "^2.0.3",
-        "vscode": "^1.0.0",
-        "mocha": "^2.3.3",
-        "@types/node": "^6.0.40",
-        "@types/mocha": "^2.2.32"
-    },
-    "dependencies": {
-        "@types/rsync": "^0.4.28",
-        "rsync": "^0.5.0"
+      }
     }
+  },
+  "scripts": {
+    "vscode:prepublish": "tsc -p ./",
+    "compile": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "node ./node_modules/vscode/bin/test"
+  },
+  "devDependencies": {
+    "typescript": "^2.0.3",
+    "vscode": "^1.0.0",
+    "mocha": "^2.3.3",
+    "@types/node": "^6.0.40",
+    "@types/mocha": "^2.2.32"
+  },
+  "dependencies": {
+    "rsync": "^0.6.1"
+  }
 }
