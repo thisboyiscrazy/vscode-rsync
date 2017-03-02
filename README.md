@@ -26,7 +26,7 @@ This extension contributes the following settings:
 * `sync-rsync.onSave`: sync project on save (currently syncs entire project because I do have an easy way to deal with excluded files)
 * `sync-rsync.autoHideOutput`: Auto hide rsync output when rsync is done
 
-### 0.6.2
+### 0.7.0
 
 Auto hide rsync output when rsync is done
 
