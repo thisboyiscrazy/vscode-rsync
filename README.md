@@ -24,6 +24,12 @@ This extension contributes the following settings:
 * `sync-rsync.flags`: rsync flags
 * `sync-rsync.exclude`: rsync exclude patterns e.g.  [".git",".vscode"]
 * `sync-rsync.onSave`: sync project on save (currently syncs entire project because I do have an easy way to deal with excluded files)
+* `sync-rsync.autoHideOutput`: Auto hide rsync output when rsync is done
+
+### 0.6.2
+
+Auto hide rsync output when rsync is done
+
 
 ### 0.6.1
 

@@ -11,10 +11,10 @@ let out = vscode.window.createOutputChannel("Sync- Rsync");
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-    let config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('sync-rsync')
-
     // Should fix r to be Rsync type
     let runSync = function (r: any) {
+
+        let config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('sync-rsync')
         
         r = r
             .flags(config.get('flags','rlptzv'))
@@ -31,11 +31,17 @@ export function activate(context: vscode.ExtensionContext) {
                 if(error) {
                     vscode.window.showErrorMessage(error.message);
                 } else {
-                    out.hide();
+                    if(config.get('autoHideOutput',true)) {
+                        out.hide();
+                    }
                 }
             },
-            (data: Buffer) => {out.append(data.toString());},
-            (data: Buffer) => {out.append(data.toString());},
+            (data: Buffer) => {
+                out.append(data.toString());
+            },
+            (data: Buffer) => {
+                out.append(data.toString());
+            },
         )
     }
 
