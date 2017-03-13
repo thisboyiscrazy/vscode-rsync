@@ -21,6 +21,11 @@ export function activate(context: vscode.ExtensionContext) {
             .exclude(config.get('exclude',[".git",".vscode"]))
             .progress();
 
+        let shell = config.get('shell',undefined);
+        if(shell !== undefined) {
+            r = r.shell(shell);
+        }
+
         if(config.get('delete',false)) {
             r = r.delete()
         }
