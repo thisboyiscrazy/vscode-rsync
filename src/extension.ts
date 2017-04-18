@@ -66,7 +66,7 @@ export function activate(context: vscode.ExtensionContext) {
             return;
         }
 
-        local = local + path.delimiter;
+        local = local + path.sep;
 
         let config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('sync-rsync')
         let remote: string = config.get('remote',null);
@@ -75,8 +75,6 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.window.showErrorMessage('Sync - Rsync is not configured');    
             return;
         }
-
-        remote = remote + path.delimiter;
         
         let r = new rsync();
 
