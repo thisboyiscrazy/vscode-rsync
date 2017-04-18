@@ -59,16 +59,19 @@ export function activate(context: vscode.ExtensionContext) {
 
     let sync = function(down: boolean) {
         
-        let local: string = vscode.workspace.rootPath;
+        let config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('sync-rsync');
+
+        let local: string = config.get('local',null);
 
         if(local === null) {
-            vscode.window.showErrorMessage('Sync - Rsync: you must have a folder open');    
-            return;
+            local = vscode.workspace.rootPath
+            if(local === null) {
+                vscode.window.showErrorMessage('Sync - Rsync: you must have a folder open');    
+                return;
+            }
+            local = local + path.sep
         }
-
-        local = local + path.sep;
-
-        let config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('sync-rsync')
+        
         let remote: string = config.get('remote',null);
 
         if(remote === null) {

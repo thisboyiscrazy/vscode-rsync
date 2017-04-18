@@ -19,7 +19,8 @@ Rsync installed both locally and remotely
 
 This extension contributes the following settings:
 
-* `sync-rsync.remote`: the rsync remote location e.g. user@remote:path (must end in / (unix like) or \ (windows))
+* `sync-rsync.remote`: the rsync remote location e.g. user@remote:path (must end in path separator)
+* `sync-rsync.local`: the local location defaults to workspace (must end in path separator)
 * `sync-rsync.delete`: true or false if you want rsync to delete files
 * `sync-rsync.flags`: rsync flags
 * `sync-rsync.exclude`: rsync exclude patterns e.g.  [".git",".vscode"]
@@ -27,6 +28,10 @@ This extension contributes the following settings:
 * `sync-rsync.autoHideOutput`: Auto hide rsync output when rsync is done
 * `sync-rsync.shell`: Rsync's -e option e.g. ssh -p 1234
 * `sync-rsync.chmod`: Rsync's --chmod option
+
+### 0.10.0
+
+local in config
 
 ### 0.9.3
 

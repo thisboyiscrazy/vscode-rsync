@@ -2,7 +2,7 @@
     "name": "sync-rsync",
     "displayName": "Sync - Rsync",
     "description": "Sync with remote using rsync",
-    "version": "0.9.3",
+    "version": "0.10.0",
     "publisher": "vscode-ext",
     "repository": {
         "type": "git",
@@ -36,7 +36,12 @@
                 "sync-rsync.remote": {
                     "type": "string",
                     "default": null,
-                    "description": "Remote Location (user@host:path)"
+                    "description": "Remote Location (user@host:path) (must end in path separator)"
+                },
+                "sync-rsync.local": {
+                    "type": "string",
+                    "default": null,
+                    "description": "Local location defaults to workspace (must end in path separator)"
                 },
                 "sync-rsync.delete": {
                     "type": "boolean",
