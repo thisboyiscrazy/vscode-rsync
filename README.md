@@ -23,10 +23,14 @@ This extension contributes the following settings:
 * `sync-rsync.delete`: true or false if you want rsync to delete files
 * `sync-rsync.flags`: rsync flags
 * `sync-rsync.exclude`: rsync exclude patterns e.g.  [".git",".vscode"]
-* `sync-rsync.onSave`: sync project on save (currently syncs entire project because I do have an easy way to deal with excluded files)
+* `sync-rsync.onSave`: sync project on save (currently syncs entire project because I do not have an easy way to deal with excluded files)
 * `sync-rsync.autoHideOutput`: Auto hide rsync output when rsync is done
 * `sync-rsync.shell`: Rsync's -e option e.g. ssh -p 1234
 * `sync-rsync.chmod`: Rsync's --chmod option
+
+### 0.9.3
+
+readme fix
 
 ### 0.9.2
 
