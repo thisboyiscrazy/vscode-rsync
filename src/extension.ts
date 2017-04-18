@@ -5,6 +5,8 @@ import * as vscode from 'vscode';
 
 import * as rsync from 'rsync';
 
+import * as path from 'path';
+
 let out = vscode.window.createOutputChannel("Sync- Rsync");
 
 // this method is called when your extension is activated
@@ -64,7 +66,7 @@ export function activate(context: vscode.ExtensionContext) {
             return;
         }
 
-        local = local + '/';
+        local = local + path.delimiter;
 
         let config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('sync-rsync')
         let remote: string = config.get('remote',null);
@@ -74,7 +76,7 @@ export function activate(context: vscode.ExtensionContext) {
             return;
         }
 
-        remote = remote + '/';
+        remote = remote + path.delimiter;
         
         let r = new rsync();
 

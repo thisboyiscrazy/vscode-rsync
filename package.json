@@ -2,7 +2,7 @@
     "name": "sync-rsync",
     "displayName": "Sync - Rsync",
     "description": "Sync with remote using rsync",
-    "version": "0.9.0",
+    "version": "0.9.1",
     "publisher": "vscode-ext",
     "repository": {
         "type": "git",

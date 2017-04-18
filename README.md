@@ -28,6 +28,10 @@ This extension contributes the following settings:
 * `sync-rsync.shell`: Rsync's -e option e.g. ssh -p 1234
 * `sync-rsync.chmod`: Rsync's --chmod option
 
+### 0.9.1
+
+path delimiter fix
+
 ### 0.9.0
 
 chmod option
