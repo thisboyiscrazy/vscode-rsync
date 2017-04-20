@@ -5,6 +5,8 @@ import * as vscode from 'vscode';
 
 import * as rsync from 'rsync';
 
+import * as path from 'path';
+
 let out = vscode.window.createOutputChannel("Sync- Rsync");
 
 // this method is called when your extension is activated
@@ -15,19 +17,24 @@ export function activate(context: vscode.ExtensionContext) {
     let runSync = function (r: any) {
 
         let config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('sync-rsync')
-        
+
         r = r
             .flags(config.get('flags','rlptzv'))
             .exclude(config.get('exclude',[".git",".vscode"]))
             .progress();
 
-        let shell = config.get('shell',undefined);
+        let shell = config.get('shell', undefined);
         if(shell !== undefined) {
             r = r.shell(shell);
         }
 
         if(config.get('delete',false)) {
-            r = r.delete()
+            r = r.delete();
+        }
+
+        let chmod = config.get('chmod', undefined);
+        if(chmod !== undefined) {
+            r = r.chmod(chmod);
         }
 
         out.show();
@@ -51,34 +58,37 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     let sync = function(down: boolean) {
-        
-        let local: string = vscode.workspace.rootPath;
+
+        let config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('sync-rsync');
+
+        let local: string = config.get('local',null);
 
         if(local === null) {
-            vscode.window.showErrorMessage('Sync - Rsync: you must have a folder open');    
-            return;
+            local = vscode.workspace.rootPath
+            if(local === null) {
+                vscode.window.showErrorMessage('Sync - Rsync: you must have a folder open');
+                return;
+            }
+            local = local + path.sep
         }
 
-        local = local + '/';
-
-        let config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('sync-rsync')
         let remote: string = config.get('remote',null);
 
         if(remote === null) {
-            vscode.window.showErrorMessage('Sync - Rsync is not configured');    
+            vscode.window.showErrorMessage('Sync - Rsync is not configured');
             return;
         }
 
-        remote = remote + '/';
-        
         let r = new rsync();
 
+        r.cwd(local);
+
         if(down) {
-            r = r.source(remote).destination(local);
+            r = r.source(remote).destination('.');
         } else {
-            r = r.source(local).destination(remote);
+            r = r.source('.').destination(remote);
         }
-        
+
         runSync(r);
 
     }
