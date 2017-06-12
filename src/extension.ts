@@ -17,19 +17,24 @@ export function activate(context: vscode.ExtensionContext) {
     let runSync = function (r: any) {
 
         let config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('sync-rsync')
-        
+
         r = r
             .flags(config.get('flags','rlptzv'))
             .exclude(config.get('exclude',[".git",".vscode"]))
             .progress();
 
-        let shell = config.get('shell',undefined);
+        let shell = config.get('shell', undefined);
         if(shell !== undefined) {
             r = r.shell(shell);
         }
 
         if(config.get('delete',false)) {
-            r = r.delete()
+            r = r.delete();
+        }
+
+        let chmod = config.get('chmod', undefined);
+        if(chmod !== undefined) {
+            r = r.chmod(chmod);
         }
 
         let chmod = config.get('chmod',undefined);
@@ -58,7 +63,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     let sync = function(down: boolean) {
-        
+
         let config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('sync-rsync');
 
         let local: string = config.get('local',null);
@@ -71,22 +76,24 @@ export function activate(context: vscode.ExtensionContext) {
             }
             local = local + path.sep
         }
-        
+
         let remote: string = config.get('remote',null);
 
         if(remote === null) {
-            vscode.window.showErrorMessage('Sync - Rsync is not configured');    
+            vscode.window.showErrorMessage('Sync - Rsync is not configured');
             return;
         }
-        
+
         let r = new rsync();
 
+        r.cwd(local);
+
         if(down) {
-            r = r.source(remote).destination(local);
+            r = r.source(remote).destination('.');
         } else {
-            r = r.source(local).destination(remote);
+            r = r.source('.').destination(remote);
         }
-        
+
         runSync(r);
 
     }

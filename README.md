@@ -29,6 +29,10 @@ This extension contributes the following settings:
 * `sync-rsync.shell`: Rsync's -e option e.g. ssh -p 1234
 * `sync-rsync.chmod`: Rsync's --chmod option
 
+### 0.10.1
+
+work on cmd or powershell with rsync.exe
+
 ### 0.10.0
 
 local in config
