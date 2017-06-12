@@ -36,12 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
         if(chmod !== undefined) {
             r = r.chmod(chmod);
         }
-
-        let chmod = config.get('chmod',undefined);
-        if(chmod !== undefined) {
-            r = r.chmod(chmod);
-        }
-
+        
         out.show();
         r.execute(
             (error,code,cmd) => {
