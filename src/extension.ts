@@ -37,6 +37,11 @@ export function activate(context: vscode.ExtensionContext) {
             r = r.chmod(chmod);
         }
 
+        let chmod = config.get('chmod',undefined);
+        if(chmod !== undefined) {
+            r = r.chmod(chmod);
+        }
+
         out.show();
         r.execute(
             (error,code,cmd) => {
@@ -66,7 +71,7 @@ export function activate(context: vscode.ExtensionContext) {
         if(local === null) {
             local = vscode.workspace.rootPath
             if(local === null) {
-                vscode.window.showErrorMessage('Sync - Rsync: you must have a folder open');
+                vscode.window.showErrorMessage('Sync - Rsync: you must have a folder open');    
                 return;
             }
             local = local + path.sep
