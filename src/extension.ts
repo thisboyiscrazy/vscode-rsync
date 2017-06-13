@@ -7,7 +7,15 @@ import * as rsync from 'rsync';
 
 import * as path from 'path';
 
-let out = vscode.window.createOutputChannel("Sync- Rsync");
+import * as child_process from 'child_process';
+
+let currentSync: child_process.ChildProcess = undefined;
+
+let out = vscode.window.createOutputChannel('Sync- Rsync');
+let status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left,0)
+status.hide();
+status.text = 'Syncing (click to kill)';
+status.command = 'sync-rsync.syncKill';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -21,6 +29,7 @@ export function activate(context: vscode.ExtensionContext) {
         r = r
             .flags(config.get('flags','rlptzv'))
             .exclude(config.get('exclude',[".git",".vscode"]))
+            .executableShell(config.get('executableShell','/bin/bash'))
             .progress();
 
         let shell = config.get('shell', undefined);
@@ -36,9 +45,11 @@ export function activate(context: vscode.ExtensionContext) {
         if(chmod !== undefined) {
             r = r.chmod(chmod);
         }
+
         
         out.show();
-        r.execute(
+        status.show();
+        currentSync = r.execute(
             (error,code,cmd) => {
                 if(error) {
                     vscode.window.showErrorMessage(error.message);
@@ -47,6 +58,8 @@ export function activate(context: vscode.ExtensionContext) {
                         out.hide();
                     }
                 }
+                currentSync = undefined;
+                status.hide()
             },
             (data: Buffer) => {
                 out.append(data.toString());
@@ -58,6 +71,11 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     let sync = function(down: boolean) {
+
+        if(currentSync != undefined) {
+            vscode.window.showErrorMessage('Sync - Rsync there is a sync in process');
+            return;
+        }
 
         let config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('sync-rsync');
 
@@ -99,6 +117,12 @@ export function activate(context: vscode.ExtensionContext) {
 
     let syncUp = vscode.commands.registerCommand('sync-rsync.syncUp', () => {
         sync(false);
+    });
+
+    let syncKill = vscode.commands.registerCommand('sync-rsync.syncKill', () => {
+        if(currentSync != undefined) {
+            currentSync.kill();
+        }
     });
 
     context.subscriptions.push(syncDown);

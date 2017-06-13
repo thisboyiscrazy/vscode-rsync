@@ -27,6 +27,10 @@
             {
                 "command": "sync-rsync.syncUp",
                 "title": "Sync - Rsync: Local to Remote"
+            },
+            {
+                "command": "sync-rsync.syncKill",
+                "title": "Sync - Rsync: Kill Current Sync"
             }
         ],
         "configuration": {
@@ -82,6 +86,11 @@
                 "sync-rsync.chmod": {
                     "type": "string",
                     "description": "Rsync's --chmod option"
+                },
+                "sync-rsync.executableShell": {
+                    "type": "string",
+                    "default": "/bin/bash",
+                    "description": "The Executable Sheel to run rsync in"
                 }
             }
         }

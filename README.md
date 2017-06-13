@@ -28,6 +28,11 @@ This extension contributes the following settings:
 * `sync-rsync.autoHideOutput`: Auto hide rsync output when rsync is done
 * `sync-rsync.shell`: Rsync's -e option e.g. ssh -p 1234
 * `sync-rsync.chmod`: Rsync's --chmod option
+* `sync-rsync.executableShell`: The Executable Sheel to run rsync in
+
+### 0.11
+
+`sync-rsync.executableShell` and the ability to kill a running sync.
 
 ### 0.10.1
 
