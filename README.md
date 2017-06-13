@@ -30,7 +30,7 @@ This extension contributes the following settings:
 * `sync-rsync.chmod`: Rsync's --chmod option
 * `sync-rsync.executableShell`: The Executable Sheel to run rsync in
 
-### 0.11
+### 0.11.0
 
 `sync-rsync.executableShell` and the ability to kill a running sync.
 
