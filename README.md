@@ -29,6 +29,11 @@ This extension contributes the following settings:
 * `sync-rsync.shell`: Rsync's -e option e.g. ssh -p 1234
 * `sync-rsync.chmod`: Rsync's --chmod option
 
+
+### 0.11.1
+
+revert breaking changes (most likley in 11282ef24d4ce697005d66562ea9720442f4eaa8 or 1b88718ea6e2f746ca8d9ac5f5c3fe6d9399778d)
+
 ### 0.10.0
 
 local in config
