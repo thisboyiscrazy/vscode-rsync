@@ -7,15 +7,7 @@ import * as rsync from 'rsync';
 
 import * as path from 'path';
 
-import * as child_process from 'child_process';
-
-let currentSync: child_process.ChildProcess = undefined;
-
-let out = vscode.window.createOutputChannel('Sync- Rsync');
-let status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left,0)
-status.hide();
-status.text = 'Syncing (click to kill)';
-status.command = 'sync-rsync.syncKill';
+let out = vscode.window.createOutputChannel("Sync- Rsync");
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -25,31 +17,28 @@ export function activate(context: vscode.ExtensionContext) {
     let runSync = function (r: any) {
 
         let config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('sync-rsync')
-
+        
         r = r
             .flags(config.get('flags','rlptzv'))
             .exclude(config.get('exclude',[".git",".vscode"]))
-            .executableShell(config.get('executableShell','/bin/bash'))
             .progress();
 
-        let shell = config.get('shell', undefined);
+        let shell = config.get('shell',undefined);
         if(shell !== undefined) {
             r = r.shell(shell);
         }
 
         if(config.get('delete',false)) {
-            r = r.delete();
+            r = r.delete()
         }
 
-        let chmod = config.get('chmod', undefined);
+        let chmod = config.get('chmod',undefined);
         if(chmod !== undefined) {
             r = r.chmod(chmod);
         }
 
-        
         out.show();
-        status.show();
-        currentSync = r.execute(
+        r.execute(
             (error,code,cmd) => {
                 if(error) {
                     vscode.window.showErrorMessage(error.message);
@@ -58,8 +47,6 @@ export function activate(context: vscode.ExtensionContext) {
                         out.hide();
                     }
                 }
-                currentSync = undefined;
-                status.hide()
             },
             (data: Buffer) => {
                 out.append(data.toString());
@@ -71,12 +58,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     let sync = function(down: boolean) {
-
-        if(currentSync != undefined) {
-            vscode.window.showErrorMessage('Sync - Rsync there is a sync in process');
-            return;
-        }
-
+        
         let config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('sync-rsync');
 
         let local: string = config.get('local',null);
@@ -89,24 +71,22 @@ export function activate(context: vscode.ExtensionContext) {
             }
             local = local + path.sep
         }
-
+        
         let remote: string = config.get('remote',null);
 
         if(remote === null) {
-            vscode.window.showErrorMessage('Sync - Rsync is not configured');
+            vscode.window.showErrorMessage('Sync - Rsync is not configured');    
             return;
         }
-
+        
         let r = new rsync();
 
-        r.cwd(local);
-
         if(down) {
-            r = r.source(remote).destination('.');
+            r = r.source(remote).destination(local);
         } else {
-            r = r.source('.').destination(remote);
+            r = r.source(local).destination(remote);
         }
-
+        
         runSync(r);
 
     }
@@ -117,12 +97,6 @@ export function activate(context: vscode.ExtensionContext) {
 
     let syncUp = vscode.commands.registerCommand('sync-rsync.syncUp', () => {
         sync(false);
-    });
-
-    let syncKill = vscode.commands.registerCommand('sync-rsync.syncKill', () => {
-        if(currentSync != undefined) {
-            currentSync.kill();
-        }
     });
 
     context.subscriptions.push(syncDown);

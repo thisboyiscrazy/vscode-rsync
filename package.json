@@ -2,7 +2,7 @@
     "name": "sync-rsync",
     "displayName": "Sync - Rsync",
     "description": "Sync with remote using rsync",
-    "version": "0.11.1",
+    "version": "0.10.0",
     "publisher": "vscode-ext",
     "repository": {
         "type": "git",
@@ -27,10 +27,6 @@
             {
                 "command": "sync-rsync.syncUp",
                 "title": "Sync - Rsync: Local to Remote"
-            },
-            {
-                "command": "sync-rsync.syncKill",
-                "title": "Sync - Rsync: Kill Current Sync"
             }
         ],
         "configuration": {
@@ -86,11 +82,6 @@
                 "sync-rsync.chmod": {
                     "type": "string",
                     "description": "Rsync's --chmod option"
-                },
-                "sync-rsync.executableShell": {
-                    "type": "string",
-                    "default": "/bin/bash",
-                    "description": "The Executable Sheel to run rsync in"
                 }
             }
         }
@@ -109,6 +100,6 @@
         "@types/mocha": "^2.2.32"
     },
     "dependencies": {
-        "rsync": "git+https://github.com/thisboyiscrazy/node-rsync.git"
+        "rsync": "^0.6.1"
     }
 }
