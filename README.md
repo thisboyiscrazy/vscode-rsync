@@ -43,6 +43,10 @@ work on cmd or powershell with rsync.exe
 
 revert breaking changes (most likley in 11282ef24d4ce697005d66562ea9720442f4eaa8 or 1b88718ea6e2f746ca8d9ac5f5c3fe6d9399778d)
 
+### 0.11.2
+
+revert breaking changes
+
 ### 0.10.0
 
 local in config
