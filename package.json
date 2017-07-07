@@ -70,6 +70,11 @@
                     "default": false,
                     "description": "Sync File on Save"
                 },
+                "sync-rsync.autoShowOutput": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Auto show rsync output when rsync is working"
+                },
                 "sync-rsync.autoHideOutput": {
                     "type": "boolean",
                     "default": true,
