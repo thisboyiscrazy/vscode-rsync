@@ -7,7 +7,7 @@ import * as rsync from 'rsync';
 
 import * as path from 'path';
 
-let out = vscode.window.createOutputChannel("Sync- Rsync");
+let out = vscode.window.createOutputChannel("Sync - Rsync");
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -37,7 +37,10 @@ export function activate(context: vscode.ExtensionContext) {
             r = r.chmod(chmod);
         }
 
-        out.show();
+        if(config.get('autoShowOutput',true)) {
+            out.show();
+        }
+
         r.execute(
             (error,code,cmd) => {
                 if(error) {
