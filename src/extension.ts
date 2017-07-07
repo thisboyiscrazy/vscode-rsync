@@ -7,6 +7,8 @@ import * as rsync from 'rsync';
 
 import * as path from 'path';
 
+import * as debounce from 'lodash.debounce';
+
 let out = vscode.window.createOutputChannel("Sync - Rsync");
 let statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 10);
 let getStatus = (text: string) => `Rsync: ${text}`;
@@ -64,7 +66,7 @@ export function activate(context: vscode.ExtensionContext) {
         )
     }
 
-    let sync = function(config: vscode.WorkspaceConfiguration, down: boolean) {
+    let sync = debounce(function(config: vscode.WorkspaceConfiguration, down: boolean) {
 
         let local: string = config.get('local',null);
 
@@ -91,10 +93,10 @@ export function activate(context: vscode.ExtensionContext) {
         } else {
             r = r.source(local).destination(remote);
         }
-        
+
         runSync(r, config);
 
-    }
+    }, 100);
 
     let syncDown = vscode.commands.registerCommand('sync-rsync.syncDown', () => {
         sync(getConfig(), true);
