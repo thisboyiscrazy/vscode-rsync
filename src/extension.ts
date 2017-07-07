@@ -7,17 +7,19 @@ import * as rsync from 'rsync';
 
 import * as path from 'path';
 
-let out = vscode.window.createOutputChannel("Sync- Rsync");
+import * as debounce from 'lodash.debounce';
+
+let out = vscode.window.createOutputChannel("Sync - Rsync");
+let statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 10);
+let getStatus = (text: string) => `Rsync: ${text}`;
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+    let getConfig = (): vscode.WorkspaceConfiguration => vscode.workspace.getConfiguration('sync-rsync');
 
     // Should fix r to be Rsync type
-    let runSync = function (r: any) {
-
-        let config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('sync-rsync')
-        
+    let runSync = function (r: any, config: vscode.WorkspaceConfiguration) {
         r = r
             .flags(config.get('flags','rlptzv'))
             .exclude(config.get('exclude',[".git",".vscode"]))
@@ -37,15 +39,22 @@ export function activate(context: vscode.ExtensionContext) {
             r = r.chmod(chmod);
         }
 
-        out.show();
+        if(config.get('autoShowOutput',true)) {
+            out.show();
+        }
+
+        statusBar.text = getStatus('$(sync)');
+
         r.execute(
             (error,code,cmd) => {
                 if(error) {
                     vscode.window.showErrorMessage(error.message);
+                    statusBar.text = getStatus('$(alert)');
                 } else {
                     if(config.get('autoHideOutput',true)) {
                         out.hide();
                     }
+                    statusBar.text = getStatus('$(check)');
                 }
             },
             (data: Buffer) => {
@@ -57,9 +66,7 @@ export function activate(context: vscode.ExtensionContext) {
         )
     }
 
-    let sync = function(down: boolean) {
-        
-        let config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('sync-rsync');
+    let sync = debounce(function(config: vscode.WorkspaceConfiguration, down: boolean) {
 
         let local: string = config.get('local',null);
 
@@ -86,22 +93,30 @@ export function activate(context: vscode.ExtensionContext) {
         } else {
             r = r.source(local).destination(remote);
         }
-        
-        runSync(r);
 
-    }
+        runSync(r, config);
+
+    }, 100);
 
     let syncDown = vscode.commands.registerCommand('sync-rsync.syncDown', () => {
-        sync(true);
+        sync(getConfig(), true);
     });
 
     let syncUp = vscode.commands.registerCommand('sync-rsync.syncUp', () => {
-        sync(false);
+        sync(getConfig(), false);
+    });
+
+    let showStatus = vscode.commands.registerCommand('sync-rsync.showStatus', () => {
+        out.show();
     });
 
     context.subscriptions.push(syncDown);
     context.subscriptions.push(syncUp);
+    context.subscriptions.push(showStatus);
 
+    statusBar.text = getStatus('$(question)');
+    statusBar.command = 'sync-rsync.showStatus';
+    statusBar.show();
 
     // On Save
     vscode.workspace.onDidSaveTextDocument((e: vscode.TextDocument) => {
@@ -109,7 +124,7 @@ export function activate(context: vscode.ExtensionContext) {
         let onSave: boolean = config.get('onSave',false);
 
         if(onSave) {
-            sync(false);
+            sync(getConfig(), false);
         }
     });
 }
