@@ -23,6 +23,7 @@ const createStatusText = (text: string): string => `Rsync: ${text}`;
 const getConfig = (): Config => new Config(workspace.getConfiguration('sync-rsync'));
 
 const runSync: Function = function (rsync: Rsync, config: Config): void {
+    statusBar.color = 'yellow';
     statusBar.text = createStatusText('$(sync)');
     const syncStartTime: Date = new Date();
     outputChannel.appendLine(`\n${syncStartTime.toISOString()} syncing`);
@@ -35,11 +36,13 @@ const runSync: Function = function (rsync: Rsync, config: Config): void {
         (error, code, cmd): void => {
             if (error) {
                 vscWindow.showErrorMessage(error.message);
+                statusBar.color = 'red';
                 statusBar.text = createStatusText('$(alert)');
             } else {
                 if (config.autoHideOutput) {
                     outputChannel.hide();
                 }
+                statusBar.color = 'lightgreen';
                 statusBar.text = createStatusText('$(check)');
             }
         },
