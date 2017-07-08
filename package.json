@@ -1,6 +1,6 @@
 {
   "name": "sync-rsync",
-  "displayName": "Sync - Rsync",
+  "displayName": "Sync-Rsync",
   "description": "Sync with remote using rsync",
   "version": "0.12.0",
   "publisher": "leshniak",
@@ -72,12 +72,12 @@
         },
         "sync-rsync.autoShowOutput": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "Auto show rsync output when rsync is working"
         },
         "sync-rsync.autoHideOutput": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "Auto hide rsync output when rsync is done"
         },
         "sync-rsync.shell": {

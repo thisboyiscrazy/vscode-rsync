@@ -8,8 +8,8 @@ This extension syncs with a remote server using rsync
 
 With these commands:
 
-* `Sync - Rsync: Local to Remote`
-* `Sync - Rsync: Remote to local`
+* `Sync-Rsync: Local to Remote`
+* `Sync-Rsync: Remote to local`
 
 ## Requirements
 
@@ -23,7 +23,7 @@ This extension contributes the following settings:
 * `sync-rsync.local`: the local location defaults to workspace (must end in path separator)
 * `sync-rsync.delete`: true or false if you want rsync to delete files
 * `sync-rsync.flags`: rsync flags
-* `sync-rsync.exclude`: rsync exclude patterns e.g.  [".git",".vscode"]
+* `sync-rsync.exclude`: rsync exclude patterns e.g. [".git",".vscode"]
 * `sync-rsync.onSave`: sync project on save (currently syncs entire project because I do not have an easy way to deal with excluded files)
 * `sync-rsync.autoShowOutput`: Auto show rsync output when rsync is working
 * `sync-rsync.autoHideOutput`: Auto hide rsync output when rsync is done
