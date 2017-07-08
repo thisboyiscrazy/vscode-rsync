@@ -22,21 +22,21 @@
     "commands": [
       {
         "command": "sync-rsync.syncDown",
-        "title": "Sync - Rsync: Remote to Local"
+        "title": "Sync-Rsync: Remote to Local"
       },
       {
         "command": "sync-rsync.syncUp",
-        "title": "Sync - Rsync: Local to Remote"
+        "title": "Sync-Rsync: Local to Remote"
       }
     ],
     "configuration": {
       "type": "object",
-      "title": "Sync - Rsync configuration",
+      "title": "Sync-Rsync configuration",
       "properties": {
         "sync-rsync.remote": {
           "type": "string",
           "default": null,
-          "description": "Remote Location (user@host:path) (must end in path separator)"
+          "description": "Remote location (user@host:path) (must end in path separator)"
         },
         "sync-rsync.local": {
           "type": "string",
@@ -51,7 +51,7 @@
         "sync-rsync.flags": {
           "type": "string",
           "default": "rlptzv",
-          "description": "Rsync Flags"
+          "description": "Rsync flags"
         },
         "sync-rsync.exclude": {
           "type": "array",
@@ -62,13 +62,13 @@
           "description": "Rsync exclude patterns",
           "items": {
             "type": "string",
-            "title": "Rsync exclude pattern"
+            "title": "rsync exclude pattern"
           }
         },
         "sync-rsync.onSave": {
           "type": "boolean",
           "default": false,
-          "description": "Sync File on Save"
+          "description": "Sync file on save"
         },
         "sync-rsync.autoShowOutput": {
           "type": "boolean",

@@ -18,7 +18,7 @@ import * as Rsync from 'rsync';
 import Config from './Config';
 
 const outputChannel: OutputChannel = vscWindow.createOutputChannel('Sync-Rsync');
-const statusBar: StatusBarItem = vscWindow.createStatusBarItem(StatusBarAlignment.Right, 10);
+const statusBar: StatusBarItem = vscWindow.createStatusBarItem(StatusBarAlignment.Right, 1);
 const createStatusText = (text: string): string => `Rsync: ${text}`;
 const getConfig = (): Config => new Config(workspace.getConfiguration('sync-rsync'));
 
@@ -26,7 +26,7 @@ const runSync: Function = function (rsync: Rsync, config: Config): void {
     statusBar.color = 'yellow';
     statusBar.text = createStatusText('$(sync)');
     const syncStartTime: Date = new Date();
-    outputChannel.appendLine(`\n${syncStartTime.toISOString()} syncing`);
+    outputChannel.appendLine(`\n${syncStartTime.toString()} syncing`);
 
     if (config.autoShowOutput) {
         outputChannel.show();
@@ -42,7 +42,7 @@ const runSync: Function = function (rsync: Rsync, config: Config): void {
                 if (config.autoHideOutput) {
                     outputChannel.hide();
                 }
-                statusBar.color = 'lightgreen';
+                statusBar.color = 'mediumseagreen';
                 statusBar.text = createStatusText('$(check)');
             }
         },
