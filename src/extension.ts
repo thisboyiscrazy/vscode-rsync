@@ -26,7 +26,9 @@ const runSync: Function = function (rsync: Rsync, config: Config): void {
     statusBar.color = 'yellow';
     statusBar.text = createStatusText('$(sync)');
     const syncStartTime: Date = new Date();
+    const rsyncArgs: Array<string> = rsync.args();
     outputChannel.appendLine(`\n${syncStartTime.toString()} syncing`);
+    outputChannel.appendLine(`> rsync ${rsyncArgs.join(' ')}`);
 
     if (config.autoShowOutput) {
         outputChannel.show();
