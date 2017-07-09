@@ -117,17 +117,30 @@ const compareDown = (config: Config) => sync(config, {down: true, dry: true});
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: ExtensionContext): void {
+    let config: Config = getConfig();
+
+    workspace.onDidChangeConfiguration((): void => {
+        config = getConfig();
+    });
+
+    const debouncedSyncUp: (config: Config) => void = debounce(syncUp, 100); // debounce 100ms in case of 'Save All'
+    workspace.onDidSaveTextDocument((): void => {
+        if (config.onFileSave) {
+            debouncedSyncUp(config);
+        }
+    });
+
     const syncDownCommand: Disposable = commands.registerCommand('sync-rsync.syncDown', (): void => {
-        syncDown(getConfig());
+        syncDown(config);
     });
     const syncUpCommand: Disposable = commands.registerCommand('sync-rsync.syncUp', (): void => {
-        syncUp(getConfig());
+        syncUp(config);
     });
     const compareDownCommand: Disposable = commands.registerCommand('sync-rsync.compareDown', (): void => {
-        compareDown(getConfig());
+        compareDown(config);
     });
     const compareUpCommand: Disposable = commands.registerCommand('sync-rsync.compareUp', (): void => {
-        compareUp(getConfig());
+        compareUp(config);
     });
     const showOutputCommand: Disposable = commands.registerCommand('sync-rsync.showOutput', (): void => {
         outputChannel.show();
@@ -138,15 +151,6 @@ export function activate(context: ExtensionContext): void {
     context.subscriptions.push(compareDownCommand);
     context.subscriptions.push(compareUpCommand);
     context.subscriptions.push(showOutputCommand);
-
-    const debouncedSyncUp: (config: Config) => void = debounce(syncUp, 100); // debounce 100ms in case of 'Save All'
-    workspace.onDidSaveTextDocument((): void => {
-        const config: Config = getConfig();
-
-        if (config.onFileSave) {
-            debouncedSyncUp(config);
-        }
-    });
 
     statusBar.text = createStatusText('$(info)');
     statusBar.command = 'sync-rsync.showOutput';
