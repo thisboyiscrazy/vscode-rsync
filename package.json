@@ -22,11 +22,19 @@
     "commands": [
       {
         "command": "sync-rsync.syncDown",
-        "title": "Sync-Rsync: Remote to Local"
+        "title": "Sync-Rsync: Sync Remote to Local"
       },
       {
         "command": "sync-rsync.syncUp",
-        "title": "Sync-Rsync: Local to Remote"
+        "title": "Sync-Rsync: Sync Local to Remote"
+      },
+      {
+        "command": "sync-rsync.compareDown",
+        "title": "Sync-Rsync: Compare Remote to Local"
+      },
+      {
+        "command": "sync-rsync.compareUp",
+        "title": "Sync-Rsync: Compare Local to Remote"
       }
     ],
     "configuration": {

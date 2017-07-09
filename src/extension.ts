@@ -26,9 +26,9 @@ const runSync = function (rsync: Rsync, config: Config): void {
     statusBar.color = 'yellow';
     statusBar.text = createStatusText('$(sync)');
     const syncStartTime: Date = new Date();
-    const rsyncArgs: Array<string> = rsync.args();
-    outputChannel.appendLine(`\n${syncStartTime.toString()} syncing`);
-    outputChannel.appendLine(`> rsync ${rsyncArgs.join(' ')}`);
+    const isDryRun: boolean = rsync.isSet('n');
+    outputChannel.appendLine(`\n${syncStartTime.toString()} ${isDryRun ? 'comparing' : 'syncing'}`);
+    outputChannel.appendLine(`> ${rsync.command()}`);
 
     if (config.autoShowOutput) {
         outputChannel.show();
@@ -57,7 +57,7 @@ const runSync = function (rsync: Rsync, config: Config): void {
     );
 };
 
-const sync = function (config: Config, down: boolean): void {
+const sync = function (config: Config, {down, dry}: {down: boolean, dry: boolean}): void {
     let localPath: string = config.localPath;
     const remotePath: string = config.remotePath;
 
@@ -85,6 +85,10 @@ const sync = function (config: Config, down: boolean): void {
         rsync = rsync.source(localPath).destination(remotePath);
     }
 
+    if (dry) {
+        rsync = rsync.dry();
+    }
+
     rsync = rsync
         .flags(config.flags)
         .exclude(config.exclude)
@@ -105,8 +109,10 @@ const sync = function (config: Config, down: boolean): void {
     runSync(rsync, config);
 };
 
-const syncUp = (config: Config) => sync(config, false);
-const syncDown = (config: Config) => sync(config, true);
+const syncUp = (config: Config) => sync(config, {down: false, dry: false});
+const syncDown = (config: Config) => sync(config, {down: true, dry: false});
+const compareUp = (config: Config) => sync(config, {down: false, dry: true});
+const compareDown = (config: Config) => sync(config, {down: true, dry: true});
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -117,12 +123,20 @@ export function activate(context: ExtensionContext): void {
     const syncUpCommand: Disposable = commands.registerCommand('sync-rsync.syncUp', (): void => {
         syncUp(getConfig());
     });
+    const compareDownCommand: Disposable = commands.registerCommand('sync-rsync.compareDown', (): void => {
+        compareDown(getConfig());
+    });
+    const compareUpCommand: Disposable = commands.registerCommand('sync-rsync.compareUp', (): void => {
+        compareUp(getConfig());
+    });
     const showOutputCommand: Disposable = commands.registerCommand('sync-rsync.showOutput', (): void => {
         outputChannel.show();
     });
 
     context.subscriptions.push(syncDownCommand);
     context.subscriptions.push(syncUpCommand);
+    context.subscriptions.push(compareDownCommand);
+    context.subscriptions.push(compareUpCommand);
     context.subscriptions.push(showOutputCommand);
 
     const debouncedSyncUp: (config: Config) => void = debounce(syncUp, 100); // debounce 100ms in case of 'Save All'
