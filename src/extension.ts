@@ -22,11 +22,13 @@ const statusBar: StatusBarItem = vscWindow.createStatusBarItem(StatusBarAlignmen
 const createStatusText = (text: string): string => `Rsync: ${text}`;
 const getConfig = (): Config => new Config(workspace.getConfiguration('sync-rsync'));
 
-const runSync: Function = function (rsync: Rsync, config: Config): void {
+const runSync = function (rsync: Rsync, config: Config): void {
     statusBar.color = 'yellow';
     statusBar.text = createStatusText('$(sync)');
     const syncStartTime: Date = new Date();
+    const rsyncArgs: Array<string> = rsync.args();
     outputChannel.appendLine(`\n${syncStartTime.toString()} syncing`);
+    outputChannel.appendLine(`> rsync ${rsyncArgs.join(' ')}`);
 
     if (config.autoShowOutput) {
         outputChannel.show();
@@ -55,7 +57,7 @@ const runSync: Function = function (rsync: Rsync, config: Config): void {
     );
 };
 
-const sync: Function = function (config: Config, down: boolean): void {
+const sync = function (config: Config, down: boolean): void {
     let localPath: string = config.localPath;
     const remotePath: string = config.remotePath;
 
@@ -103,34 +105,37 @@ const sync: Function = function (config: Config, down: boolean): void {
     runSync(rsync, config);
 };
 
+const syncUp = (config: Config) => sync(config, false);
+const syncDown = (config: Config) => sync(config, true);
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: ExtensionContext): void {
-    const syncDown: Disposable = commands.registerCommand('sync-rsync.syncDown', (): void => {
-        sync(getConfig(), true);
+    const syncDownCommand: Disposable = commands.registerCommand('sync-rsync.syncDown', (): void => {
+        syncDown(getConfig());
     });
-    const syncUp: Disposable = commands.registerCommand('sync-rsync.syncUp', (): void => {
-        sync(getConfig(), false);
+    const syncUpCommand: Disposable = commands.registerCommand('sync-rsync.syncUp', (): void => {
+        syncUp(getConfig());
     });
-    const showStatus: Disposable = commands.registerCommand('sync-rsync.showStatus', (): void => {
+    const showOutputCommand: Disposable = commands.registerCommand('sync-rsync.showOutput', (): void => {
         outputChannel.show();
     });
 
-    context.subscriptions.push(syncDown);
-    context.subscriptions.push(syncUp);
-    context.subscriptions.push(showStatus);
+    context.subscriptions.push(syncDownCommand);
+    context.subscriptions.push(syncUpCommand);
+    context.subscriptions.push(showOutputCommand);
 
-    const debouncedSync: Function = debounce(sync, 100); // debounce 100ms in case of 'Save All'
+    const debouncedSyncUp: (config: Config) => void = debounce(syncUp, 100); // debounce 100ms in case of 'Save All'
     workspace.onDidSaveTextDocument((): void => {
         const config: Config = getConfig();
 
         if (config.onFileSave) {
-            debouncedSync(config, false);
+            debouncedSyncUp(config);
         }
     });
 
     statusBar.text = createStatusText('$(info)');
-    statusBar.command = 'sync-rsync.showStatus';
+    statusBar.command = 'sync-rsync.showOutput';
     statusBar.show();
     outputChannel.appendLine('Sync-Rsync started');
 }
