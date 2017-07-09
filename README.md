@@ -8,8 +8,10 @@ This extension syncs with a remote server using rsync
 
 With these commands:
 
-* `Sync-Rsync: Local to Remote`
-* `Sync-Rsync: Remote to local`
+* `Sync-Rsync: Sync Local to Remote`
+* `Sync-Rsync: Sync Remote to local`
+* `Sync-Rsync: Compare Local to Remote` (dry run)
+* `Sync-Rsync: Compare Remote to local` (dry run)
 
 ## Requirements
 
