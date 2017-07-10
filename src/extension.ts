@@ -44,7 +44,7 @@ const runSync = function (rsync: Rsync, config: Config): void {
                 if (config.autoHideOutput) {
                     outputChannel.hide();
                 }
-                statusBar.color = 'white';
+                statusBar.color = undefined;
                 statusBar.text = createStatusText('$(check)');
             }
         },
