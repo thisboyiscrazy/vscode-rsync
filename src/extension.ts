@@ -1,122 +1,162 @@
 'use strict';
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
-
-import * as rsync from 'rsync';
-
+import {
+    WorkspaceConfiguration,
+    ExtensionContext,
+    StatusBarAlignment,
+    OutputChannel,
+    StatusBarItem,
+    Disposable,
+    window as vscWindow,
+    workspace,
+    commands
+} from 'vscode';
 import * as path from 'path';
+import * as debounce from 'lodash.debounce';
+import * as Rsync from 'rsync';
+import Config from './Config';
 
-let out = vscode.window.createOutputChannel("Sync - Rsync");
+const outputChannel: OutputChannel = vscWindow.createOutputChannel('Sync-Rsync');
+const statusBar: StatusBarItem = vscWindow.createStatusBarItem(StatusBarAlignment.Right, 1);
+const createStatusText = (text: string): string => `Rsync: ${text}`;
+const getConfig = (): Config => new Config(workspace.getConfiguration('sync-rsync'));
+
+const runSync = function (rsync: Rsync, config: Config): void {
+    statusBar.color = 'yellow';
+    statusBar.text = createStatusText('$(sync)');
+    const syncStartTime: Date = new Date();
+    const isDryRun: boolean = rsync.isSet('n');
+    outputChannel.appendLine(`\n${syncStartTime.toString()} ${isDryRun ? 'comparing' : 'syncing'}`);
+    outputChannel.appendLine(`> ${rsync.command()}`);
+
+    if (config.autoShowOutput) {
+        outputChannel.show();
+    }
+
+    rsync.execute(
+        (error, code, cmd): void => {
+            if (error) {
+                vscWindow.showErrorMessage(error.message);
+                statusBar.color = 'red';
+                statusBar.text = createStatusText('$(alert)');
+            } else {
+                if (config.autoHideOutput) {
+                    outputChannel.hide();
+                }
+                statusBar.color = 'mediumseagreen';
+                statusBar.text = createStatusText('$(check)');
+            }
+        },
+        (data: Buffer): void => {
+            outputChannel.append(data.toString());
+        },
+        (data: Buffer): void => {
+            outputChannel.append(data.toString());
+        },
+    );
+};
+
+const sync = function (config: Config, {down, dry}: {down: boolean, dry: boolean}): void {
+    let localPath: string = config.localPath;
+    const remotePath: string = config.remotePath;
+
+    if (localPath === null) {
+        localPath = workspace.rootPath;
+
+        if (localPath === null) {
+            vscWindow.showErrorMessage('Sync-Rsync: you must have a folder open');
+            return;
+        }
+
+        localPath = localPath + path.sep;
+    }
+
+    if (remotePath === null) {
+        vscWindow.showErrorMessage('Sync-Rsync is not configured');
+        return;
+    }
+
+    let rsync: Rsync = new Rsync();
+
+    if (down) {
+        rsync = rsync.source(remotePath).destination(localPath);
+    } else {
+        rsync = rsync.source(localPath).destination(remotePath);
+    }
+
+    if (dry) {
+        rsync = rsync.dry();
+    }
+
+    rsync = rsync
+        .flags(config.flags)
+        .exclude(config.exclude)
+        .progress();
+
+    if (config.shell !== undefined) {
+        rsync = rsync.shell(config.shell);
+    }
+
+    if (config.delete) {
+        rsync = rsync.delete();
+    }
+
+    if (config.chmod !== undefined) {
+        rsync = rsync.chmod(config.chmod);
+    }
+
+    runSync(rsync, config);
+};
+
+const syncUp = (config: Config) => sync(config, {down: false, dry: false});
+const syncDown = (config: Config) => sync(config, {down: true, dry: false});
+const compareUp = (config: Config) => sync(config, {down: false, dry: true});
+const compareDown = (config: Config) => sync(config, {down: true, dry: true});
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: ExtensionContext): void {
+    let config: Config = getConfig();
 
-    // Should fix r to be Rsync type
-    let runSync = function (r: any) {
-
-        let config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('sync-rsync')
-        
-        r = r
-            .flags(config.get('flags','rlptzv'))
-            .exclude(config.get('exclude',[".git",".vscode"]))
-            .progress();
-
-        let shell = config.get('shell',undefined);
-        if(shell !== undefined) {
-            r = r.shell(shell);
-        }
-
-        if(config.get('delete',false)) {
-            r = r.delete()
-        }
-
-        let chmod = config.get('chmod',undefined);
-        if(chmod !== undefined) {
-            r = r.chmod(chmod);
-        }
-
-        if(config.get('autoShowOutput',true)) {
-            out.show();
-        }
-
-        r.execute(
-            (error,code,cmd) => {
-                if(error) {
-                    vscode.window.showErrorMessage(error.message);
-                } else {
-                    if(config.get('autoHideOutput',true)) {
-                        out.hide();
-                    }
-                }
-            },
-            (data: Buffer) => {
-                out.append(data.toString());
-            },
-            (data: Buffer) => {
-                out.append(data.toString());
-            },
-        )
-    }
-
-    let sync = function(down: boolean) {
-        
-        let config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('sync-rsync');
-
-        let local: string = config.get('local',null);
-
-        if(local === null) {
-            local = vscode.workspace.rootPath
-            if(local === null) {
-                vscode.window.showErrorMessage('Sync - Rsync: you must have a folder open');    
-                return;
-            }
-            local = local + path.sep
-        }
-        
-        let remote: string = config.get('remote',null);
-
-        if(remote === null) {
-            vscode.window.showErrorMessage('Sync - Rsync is not configured');    
-            return;
-        }
-        
-        let r = new rsync();
-
-        if(down) {
-            r = r.source(remote).destination(local);
-        } else {
-            r = r.source(local).destination(remote);
-        }
-        
-        runSync(r);
-
-    }
-
-    let syncDown = vscode.commands.registerCommand('sync-rsync.syncDown', () => {
-        sync(true);
+    workspace.onDidChangeConfiguration((): void => {
+        config = getConfig();
     });
 
-    let syncUp = vscode.commands.registerCommand('sync-rsync.syncUp', () => {
-        sync(false);
-    });
-
-    context.subscriptions.push(syncDown);
-    context.subscriptions.push(syncUp);
-
-
-    // On Save
-    vscode.workspace.onDidSaveTextDocument((e: vscode.TextDocument) => {
-        let config: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('sync-rsync')
-        let onSave: boolean = config.get('onSave',false);
-
-        if(onSave) {
-            sync(false);
+    const debouncedSyncUp: (config: Config) => void = debounce(syncUp, 100); // debounce 100ms in case of 'Save All'
+    workspace.onDidSaveTextDocument((): void => {
+        if (config.onFileSave) {
+            debouncedSyncUp(config);
         }
     });
+
+    const syncDownCommand: Disposable = commands.registerCommand('sync-rsync.syncDown', (): void => {
+        syncDown(config);
+    });
+    const syncUpCommand: Disposable = commands.registerCommand('sync-rsync.syncUp', (): void => {
+        syncUp(config);
+    });
+    const compareDownCommand: Disposable = commands.registerCommand('sync-rsync.compareDown', (): void => {
+        compareDown(config);
+    });
+    const compareUpCommand: Disposable = commands.registerCommand('sync-rsync.compareUp', (): void => {
+        compareUp(config);
+    });
+    const showOutputCommand: Disposable = commands.registerCommand('sync-rsync.showOutput', (): void => {
+        outputChannel.show();
+    });
+
+    context.subscriptions.push(syncDownCommand);
+    context.subscriptions.push(syncUpCommand);
+    context.subscriptions.push(compareDownCommand);
+    context.subscriptions.push(compareUpCommand);
+    context.subscriptions.push(showOutputCommand);
+
+    statusBar.text = createStatusText('$(info)');
+    statusBar.command = 'sync-rsync.showOutput';
+    statusBar.show();
+    outputChannel.appendLine('Sync-Rsync started');
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {
-}
+export function deactivate(): void {}
