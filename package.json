@@ -2,11 +2,11 @@
   "name": "sync-rsync",
   "displayName": "Sync-Rsync",
   "description": "Sync with remote using rsync",
-  "version": "0.12.0",
+  "version": "0.14.0",
   "publisher": "vscode-ext",
   "repository": {
     "type": "git",
-    "url": "https://github.com/leshniak/vscode-rsync"
+    "url": "https://github.com/thisboyiscrazy/vscode-rsync"
   },
   "engines": {
     "vscode": "^1.5.0"

@@ -32,6 +32,14 @@ This extension contributes the following settings:
 * `sync-rsync.shell`: Rsync's -e option e.g. ssh -p 1234
 * `sync-rsync.chmod`: Rsync's --chmod option
 
+### 0.14.0
+
+Minor color scheme change
+
+### 0.13.0
+
+Lots of minor updates thanks to @leshniak
+
 ### 0.12.0
 
 added sync-rsync.autoShowOutput

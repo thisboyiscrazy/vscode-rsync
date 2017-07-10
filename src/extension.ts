@@ -23,7 +23,7 @@ const createStatusText = (text: string): string => `Rsync: ${text}`;
 const getConfig = (): Config => new Config(workspace.getConfiguration('sync-rsync'));
 
 const runSync = function (rsync: Rsync, config: Config): void {
-    statusBar.color = 'yellow';
+    statusBar.color = 'mediumseagreen';
     statusBar.text = createStatusText('$(sync)');
     const syncStartTime: Date = new Date();
     const isDryRun: boolean = rsync.isSet('n');
@@ -44,7 +44,7 @@ const runSync = function (rsync: Rsync, config: Config): void {
                 if (config.autoHideOutput) {
                     outputChannel.hide();
                 }
-                statusBar.color = 'mediumseagreen';
+                statusBar.color = 'white';
                 statusBar.text = createStatusText('$(check)');
             }
         },
