@@ -2,7 +2,7 @@
   "name": "sync-rsync",
   "displayName": "Sync-Rsync",
   "description": "Sync with remote using rsync",
-  "version": "0.14.1",
+  "version": "0.14.2",
   "publisher": "vscode-ext",
   "repository": {
     "type": "git",
@@ -108,12 +108,12 @@
   "devDependencies": {
     "@types/mocha": "^2.2.32",
     "@types/node": "^6.0.40",
-    "lodash.debounce": "^4.0.8",
     "mocha": "^2.3.3",
     "typescript": "^2.0.3",
     "vscode": "^1.0.0"
   },
   "dependencies": {
-    "rsync": "^0.6.1"
+    "rsync": "^0.6.1",
+    "lodash.debounce": "^4.0.8",
   }
 }
