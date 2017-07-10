@@ -38,7 +38,7 @@ Minor color scheme change
 
 ### 0.13.0
 
-Lots of minor updates thanks to @leshniak
+Lots of minor updates thanks to https://github.com/leshniak
 
 ### 0.12.0
 
