@@ -32,6 +32,16 @@ This extension contributes the following settings:
 * `sync-rsync.shell`: Rsync's -e option e.g. ssh -p 1234
 * `sync-rsync.chmod`: Rsync's --chmod option
 
+## Windows Notes
+
+If you are using rsync that uses cygwin you will need to set `"sync-rsync.local"` to use cygwin drives e.g.:
+
+```
+"sync-rsync.local": "/cygdrive/c/Users/joe/Documents/projects/sync_test/"
+```
+
+## Change Log
+
 ### 0.14.0
 
 Minor color scheme change
