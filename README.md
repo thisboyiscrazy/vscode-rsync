@@ -41,7 +41,7 @@ Sites:
 
 ## Multiple Sites
 
-If no sites are defined sync-rsync will create one site using the defaults
+If no sites are defined sync-rsync will create one site using the defaults.
 
 Sites have these options, they are all optional sync-rsync will use the defaults if they are not defined:
 
