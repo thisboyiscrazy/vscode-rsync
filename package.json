@@ -2,7 +2,7 @@
   "name": "sync-rsync",
   "displayName": "Sync-Rsync",
   "description": "Sync with remote using rsync",
-  "version": "0.14.2",
+  "version": "0.15.0",
   "publisher": "vscode-ext",
   "repository": {
     "type": "git",
@@ -41,15 +41,30 @@
       "type": "object",
       "title": "Sync-Rsync configuration",
       "properties": {
-        "sync-rsync.remote": {
-          "type": "string",
-          "default": null,
-          "description": "Remote location (user@host:path) (must end in path separator)"
+        "sync-rsync.autoShowOutput": {
+          "type": "boolean",
+          "default": false,
+          "description": "Auto show rsync output when rsync is working"
+        },
+        "sync-rsync.autoHideOutput": {
+          "type": "boolean",
+          "default": false,
+          "description": "Auto hide rsync output when rsync is done"
+        },
+        "sync-rsync.onSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "Sync file on save"
         },
         "sync-rsync.local": {
           "type": "string",
           "default": null,
           "description": "Local location defaults to workspace (must end in path separator)"
+        },
+        "sync-rsync.remote": {
+          "type": "string",
+          "default": null,
+          "description": "Remote location (user@host:path) (must end in path separator)"
         },
         "sync-rsync.delete": {
           "type": "boolean",
@@ -73,28 +88,63 @@
             "title": "rsync exclude pattern"
           }
         },
-        "sync-rsync.onSave": {
-          "type": "boolean",
-          "default": false,
-          "description": "Sync file on save"
-        },
-        "sync-rsync.autoShowOutput": {
-          "type": "boolean",
-          "default": false,
-          "description": "Auto show rsync output when rsync is working"
-        },
-        "sync-rsync.autoHideOutput": {
-          "type": "boolean",
-          "default": false,
-          "description": "Auto hide rsync output when rsync is done"
+        "sync-rsync.chmod": {
+          "type": "string",
+          "description": "Rsync's --chmod option"
         },
         "sync-rsync.shell": {
           "type": "string",
           "description": "Rsync's -e option e.g. ssh -p 1234"
         },
-        "sync-rsync.chmod": {
-          "type": "string",
-          "description": "Rsync's --chmod option"
+        "sync-rsync.sites": {
+          "type": "array",
+          "description": "Sites",
+          "default":[],
+          "items": {
+            "type": "object",
+            "properties": {
+              "localPath": {
+                "type": "string",
+                "default": null,
+                "description": "Local location defaults to workspace (must end in path separator)"
+              },
+              "remotePath": {
+	              "type": "string",
+	              "default": null,
+	              "description": "Remote location (user@host:path) (must end in path separator)"
+              },
+              "deleteFiles": {
+                "type": "boolean",
+                "default": false,
+                "description": "Delete false during sync"
+              },
+              "flags": {
+                "type": "string",
+                "default": "rlptzv",
+                "description": "Rsync flags"
+              },
+              "exclude": {
+                "type": "array",
+                "default": [
+                  ".git",
+                  ".vscode"
+                ],
+                "description": "Rsync exclude patterns",
+                "items": {
+                  "type": "string",
+                  "title": "rsync exclude pattern"
+                }
+              },
+              "chmod": {
+                "type": "string",
+                "description": "Rsync's --chmod option"
+              },
+              "shell": {
+                "type": "string",
+                "description": "Rsync's -e option e.g. ssh -p 1234"
+              }
+            }
+          }
         }
       }
     }

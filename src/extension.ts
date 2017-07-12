@@ -22,91 +22,89 @@ const statusBar: StatusBarItem = vscWindow.createStatusBarItem(StatusBarAlignmen
 const createStatusText = (text: string): string => `Rsync: ${text}`;
 const getConfig = (): Config => new Config(workspace.getConfiguration('sync-rsync'));
 
-const runSync = function (rsync: Rsync, config: Config): void {
-    statusBar.color = 'mediumseagreen';
-    statusBar.text = createStatusText('$(sync)');
-    const syncStartTime: Date = new Date();
-    const isDryRun: boolean = rsync.isSet('n');
-    outputChannel.appendLine(`\n${syncStartTime.toString()} ${isDryRun ? 'comparing' : 'syncing'}`);
-    outputChannel.appendLine(`> ${rsync.command()}`);
+const runSync = function (rsync: Rsync, config: Config): Promise<boolean> {
+    return new Promise<boolean>(resolve => {
+        const syncStartTime: Date = new Date();
+        const isDryRun: boolean = rsync.isSet('n');
+        outputChannel.appendLine(`\n${syncStartTime.toString()} ${isDryRun ? 'comparing' : 'syncing'}`);
+        outputChannel.appendLine(`> ${rsync.command()}`);
 
-    if (config.autoShowOutput) {
-        outputChannel.show();
-    }
-
-    rsync.execute(
-        (error, code, cmd): void => {
-            if (error) {
-                vscWindow.showErrorMessage(error.message);
-                statusBar.color = 'red';
-                statusBar.text = createStatusText('$(alert)');
-            } else {
-                if (config.autoHideOutput) {
-                    outputChannel.hide();
-                }
-                statusBar.color = undefined;
-                statusBar.text = createStatusText('$(check)');
-            }
-        },
-        (data: Buffer): void => {
-            outputChannel.append(data.toString());
-        },
-        (data: Buffer): void => {
-            outputChannel.append(data.toString());
-        },
-    );
-};
-
-const sync = function (config: Config, {down, dry}: {down: boolean, dry: boolean}): void {
-    let localPath: string = config.localPath;
-    const remotePath: string = config.remotePath;
-
-    if (localPath === null) {
-        localPath = workspace.rootPath;
-
-        if (localPath === null) {
-            vscWindow.showErrorMessage('Sync-Rsync: you must have a folder open');
-            return;
+        if (config.autoShowOutput) {
+            outputChannel.show();
         }
 
-        localPath = localPath + path.sep;
+        rsync.execute(
+            (error, code, cmd): void => {
+                if (error) {
+                    vscWindow.showErrorMessage(error.message);
+                    resolve(false);
+                }
+                resolve(true);
+            },
+            (data: Buffer): void => {
+                outputChannel.append(data.toString());
+            },
+            (data: Buffer): void => {
+                outputChannel.append(data.toString());
+            },
+        );
+    });
+    
+};
+
+const sync = async function (config: Config, {down, dry}: {down: boolean, dry: boolean}): Promise<void> {
+    
+    statusBar.color = 'mediumseagreen';
+    statusBar.text = createStatusText('$(sync)');
+    
+    let success = true;
+
+    for(let site of config.sites) {
+
+        let rsync: Rsync = new Rsync();
+
+        if (down) {
+            rsync = rsync.source(site.remotePath).destination(site.localPath);
+        } else {
+            rsync = rsync.source(site.localPath).destination(site.remotePath);
+        }
+
+        if (dry) {
+            rsync = rsync.dry();
+        }
+
+        rsync = rsync
+            .flags(site.flags)
+            .exclude(site.exclude)
+            .progress();
+
+        if (site.shell !== undefined) {
+            rsync = rsync.shell(site.shell);
+        }
+
+        if (site.deleteFiles) {
+            rsync = rsync.delete();
+        }
+
+        if (site.chmod !== undefined) {
+            rsync = rsync.chmod(site.chmod);
+        }
+
+        let rtn = await runSync(rsync, config)
+        success = success && rtn;
     }
 
-    if (remotePath === null) {
-        vscWindow.showErrorMessage('Sync-Rsync is not configured');
-        return;
-    }
-
-    let rsync: Rsync = new Rsync();
-
-    if (down) {
-        rsync = rsync.source(remotePath).destination(localPath);
+    if(success) {
+        if (config.autoHideOutput) {
+            outputChannel.hide();
+        }
+        statusBar.color = undefined;
+        statusBar.text = createStatusText('$(check)');
     } else {
-        rsync = rsync.source(localPath).destination(remotePath);
+        outputChannel.show();
+        statusBar.color = 'red';
+        statusBar.text = createStatusText('$(alert)');
     }
-
-    if (dry) {
-        rsync = rsync.dry();
-    }
-
-    rsync = rsync
-        .flags(config.flags)
-        .exclude(config.exclude)
-        .progress();
-
-    if (config.shell !== undefined) {
-        rsync = rsync.shell(config.shell);
-    }
-
-    if (config.delete) {
-        rsync = rsync.delete();
-    }
-
-    if (config.chmod !== undefined) {
-        rsync = rsync.chmod(config.chmod);
-    }
-
-    runSync(rsync, config);
 };
 
 const syncUp = (config: Config) => sync(config, {down: false, dry: false});
