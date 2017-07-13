@@ -2,7 +2,7 @@
   "name": "sync-rsync",
   "displayName": "Sync-Rsync",
   "description": "Sync with remote using rsync",
-  "version": "0.15.2",
+  "version": "0.16.0",
   "publisher": "vscode-ext",
   "repository": {
     "type": "git",
@@ -39,6 +39,10 @@
       {
         "command": "sync-rsync.compareUp",
         "title": "Sync-Rsync: Compare Local to Remote"
+      },
+      {
+        "command": "sync-rsync.killSync",
+        "title": "Sync-Rsync: Kills the current sync"
       }
     ],
     "configuration": {
@@ -59,6 +63,10 @@
           "type": "boolean",
           "default": false,
           "description": "Sync file on save"
+        },
+        "sync-rsync.executableShell": {
+          "type": "string",
+          "description": "The executable shell to run rsync in"
         },
         "sync-rsync.local": {
           "type": "string",

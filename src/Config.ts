@@ -15,6 +15,7 @@ export class Site {
         public exclude: Array<string>,
         public chmod: string,
         public shell: string,
+        public executableShell: string
     ) {}
 
 }
@@ -38,6 +39,7 @@ export default class Config {
             config.get('exclude', ['.git', '.vscode']),
             config.get('chmod', undefined),
             config.get('shell', undefined),
+            config.get('executableShell', undefined),
         )
 
         let sites: Array<Site> = [];
@@ -62,7 +64,7 @@ export default class Config {
         }
         
         for(let site of sites) {
-            if(site.localPath === undefined) {
+            if(site.localPath === null) {
                 site.localPath = workspaceLocal;
             }
         }

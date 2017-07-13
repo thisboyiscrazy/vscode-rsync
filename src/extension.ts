@@ -16,11 +16,15 @@ import * as path from 'path';
 import * as debounce from 'lodash.debounce';
 import * as Rsync from 'rsync';
 import Config from './Config';
+import * as child from 'child_process';
 
 const outputChannel: OutputChannel = vscWindow.createOutputChannel('Sync-Rsync');
 const statusBar: StatusBarItem = vscWindow.createStatusBarItem(StatusBarAlignment.Right, 1);
 const createStatusText = (text: string): string => `Rsync: ${text}`;
 const getConfig = (): Config => new Config(workspace.getConfiguration('sync-rsync'));
+
+let currentSync: child.ChildProcess = undefined;
+let syncKilled = true;
 
 const runSync = function (rsync: Rsync, config: Config): Promise<boolean> {
     return new Promise<boolean>(resolve => {
@@ -33,8 +37,9 @@ const runSync = function (rsync: Rsync, config: Config): Promise<boolean> {
             outputChannel.show();
         }
         
-        rsync.execute(
+        currentSync = rsync.execute(
             (error, code, cmd): void => {
+                currentSync = undefined;
                 if (error) {
                     vscWindow.showErrorMessage(error.message);
                     resolve(false);
@@ -58,8 +63,12 @@ const sync = async function (config: Config, {down, dry}: {down: boolean, dry: b
     statusBar.text = createStatusText('$(sync)');
     
     let success = true;
+    syncKilled = false;
+    statusBar.command = 'sync-rsync.killSync';
 
     for(let site of config.sites) {
+
+        if (syncKilled) continue;
 
         if(site.localPath === null) {
             vscWindow.showErrorMessage('Sync-Rsync: you must have a folder open or configured local');
@@ -84,6 +93,7 @@ const sync = async function (config: Config, {down, dry}: {down: boolean, dry: b
         }
 
         rsync = rsync
+            .executableShell(site.executableShell)
             .flags(site.flags)
             .exclude(site.exclude)
             .progress();
@@ -103,6 +113,9 @@ const sync = async function (config: Config, {down, dry}: {down: boolean, dry: b
         let rtn = await runSync(rsync, config)
         success = success && rtn;
     }
+
+    syncKilled = true;
+    statusBar.command = 'sync-rsync.showOutput';
 
     if(success) {
         if (config.autoHideOutput) {
@@ -153,12 +166,17 @@ export function activate(context: ExtensionContext): void {
     const showOutputCommand: Disposable = commands.registerCommand('sync-rsync.showOutput', (): void => {
         outputChannel.show();
     });
+    const killSyncCommand: Disposable = commands.registerCommand('sync-rsync.killSync', (): void => {
+        syncKilled = true;
+        currentSync.kill();
+    });
 
     context.subscriptions.push(syncDownCommand);
     context.subscriptions.push(syncUpCommand);
     context.subscriptions.push(compareDownCommand);
     context.subscriptions.push(compareUpCommand);
     context.subscriptions.push(showOutputCommand);
+    context.subscriptions.push(killSyncCommand);
 
     statusBar.text = createStatusText('$(info)');
     statusBar.command = 'sync-rsync.showOutput';
