@@ -14,6 +14,7 @@ With these commands:
 * `Sync-Rsync: Compare Remote to local` (dry run)
 
 If no sync is running clicking the status bar item will show the output
+
 If a sync is running will kill the running sync
 
 ## Requirements
