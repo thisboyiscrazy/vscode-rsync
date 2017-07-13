@@ -25,7 +25,7 @@ This extension contributes the following settings:
 * `sync-rsync.autoHideOutput`: Auto hide rsync output when rsync is done
 * `sync-rsync.onSave`: sync project on save (currently syncs entire project because I do not have an easy way to deal with excluded files)
 
-Default Sites Options:
+Default Site Options:
 
 * `sync-rsync.local`: the local location defaults to workspace (must end in path separator)
 * `sync-rsync.remote`: the rsync remote location e.g. user@remote:path (must end in path separator)
@@ -35,13 +35,11 @@ Default Sites Options:
 * `sync-rsync.shell`: Rsync's -e option e.g. ssh -p 1234
 * `sync-rsync.chmod`: Rsync's --chmod option
 
-Sites:
+Sites (Completely Optional, If no sites are defined Sync Rsync creates one using defaults):
 
-* `sync-rsync.sites`: Multiple Site Suppoort (Multiple Sites)[#multiple-sites]
+* `sync-rsync.sites`: Multiple Site Support [Multiple Sites](#multiple-sites)
 
 ## Multiple Sites
-
-If no sites are defined sync-rsync will create one site using the defaults.
 
 Sites have these options, they are all optional sync-rsync will use the defaults if they are not defined:
 
