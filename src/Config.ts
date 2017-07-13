@@ -53,28 +53,20 @@ export default class Config {
             }
         }
 
-        let workspaceLocal = workspace.rootPath + path.sep;
-        let noLocal: boolean = false;
-        let noRemote: boolean = false;
-
+        let workspaceLocal = workspace.rootPath
+        
+        if (workspaceLocal !== undefined) {
+            workspaceLocal += path.sep;
+        } else {
+            workspaceLocal === null;
+        }
+        
         for(let site of sites) {
-            if(site.localPath === null) {
+            if(site.localPath === undefined) {
                 site.localPath = workspaceLocal;
             }
-            noLocal = noLocal ||  site.localPath === null;
-            noRemote = noRemote ||  site.remotePath === null;
         }
-
-        if(noLocal) {
-            window.showErrorMessage('Sync-Rsync: you must have a folder open or conffigured local');
-        }
-
-        if(noRemote) {
-            window.showErrorMessage('Sync-Rsync: you must configure a remote');
-        }
-
-        if(noLocal == false && noRemote == false) {
-            this.sites = sites;
-        }
+        
+        this.sites = sites;
     }
 }

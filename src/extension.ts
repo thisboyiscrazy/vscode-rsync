@@ -32,7 +32,7 @@ const runSync = function (rsync: Rsync, config: Config): Promise<boolean> {
         if (config.autoShowOutput) {
             outputChannel.show();
         }
-
+        
         rsync.execute(
             (error, code, cmd): void => {
                 if (error) {
@@ -60,6 +60,16 @@ const sync = async function (config: Config, {down, dry}: {down: boolean, dry: b
     let success = true;
 
     for(let site of config.sites) {
+
+        if(site.localPath === null) {
+            vscWindow.showErrorMessage('Sync-Rsync: you must have a folder open or configured local');
+            continue;
+        }
+
+        if(site.remotePath === null) {
+            vscWindow.showErrorMessage('Sync-Rsync: you must configure a remote');
+            continue;
+        }
 
         let rsync: Rsync = new Rsync();
 

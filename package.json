@@ -35,6 +35,10 @@
       {
         "command": "sync-rsync.compareUp",
         "title": "Sync-Rsync: Compare Local to Remote"
+      },
+      {
+        "command": "sync-rsync.compareUp",
+        "title": "Sync-Rsync: Compare Local to Remote"
       }
     ],
     "configuration": {
