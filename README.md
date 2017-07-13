@@ -12,6 +12,7 @@ With these commands:
 * `Sync-Rsync: Sync Remote to local`
 * `Sync-Rsync: Compare Local to Remote` (dry run)
 * `Sync-Rsync: Compare Remote to local` (dry run)
+* `Sync-Rsync: Kills the current sync`
 
 If no sync is running clicking the status bar item will show the output
 
