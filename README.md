@@ -16,7 +16,7 @@ With these commands:
 
 If no sync is running clicking the status bar item will show the output
 
-If a sync is running clicking the status bar item will kill the running sync
+If a sync is running clicking the status bar item will kill the running sync, see [Debian Note](#debian-notes) and [Windows Notes](#windows-notes)
 
 ## Requirements
 
@@ -91,6 +91,9 @@ If you are using rsync that uses cygwin you will need to set `"sync-rsync.local"
 ```
 "sync-rsync.local": "/cygdrive/c/Users/joe/Documents/projects/sync_test/"
 ```
+
+Because CMD does not do process management currently there is no way to kill a running sync
+
 
 ## Change Log
 
