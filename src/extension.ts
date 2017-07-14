@@ -36,25 +36,25 @@ const runSync = function (rsync: Rsync, config: Config): Promise<boolean> {
         if (config.autoShowOutput) {
             outputChannel.show();
         }
+
+        let showOutput = (data: Buffer): void => {
+                outputChannel.append(data.toString());
+        };
         
-        currentSync = rsync.execute(
-            (error, code, cmd): void => {
-                currentSync = undefined;
-                if (error) {
-                    vscWindow.showErrorMessage(error.message);
-                    resolve(false);
-                }
-                resolve(true);
-            },
-            (data: Buffer): void => {
-                outputChannel.append(data.toString());
-            },
-            (data: Buffer): void => {
-                outputChannel.append(data.toString());
-            },
-        );
+        currentSync = child.spawn('rsync',rsync.args(),{stdio: 'pipe'});
+        currentSync.stdout.on('data',showOutput);
+        currentSync.stderr.on('data',showOutput);
+
+        currentSync.on('close', function(code) {
+            
+            if(code != 0) {
+                vscWindow.showErrorMessage("rsync return " + code);
+                resolve(false);
+            }
+            resolve(true);
+            
+        });
     });
-    
 };
 
 const sync = async function (config: Config, {down, dry}: {down: boolean, dry: boolean}): Promise<void> {
