@@ -24,12 +24,12 @@ Rsync installed both locally and remotely
 
 ## Extension Settings
 
-This extension contributes the following settings (all optional):
+Overall Settings (all optional):
 
 * `sync-rsync.autoShowOutput`: Auto show rsync output when rsync is working
 * `sync-rsync.autoHideOutput`: Auto hide rsync output when rsync is done
 * `sync-rsync.onSave`: sync project on save (currently syncs entire project because I do not have an easy way to deal with excluded files)
-* `sync-rsync.executableShell`: The executable shell to run rsync in (e.g. /bin/sh)
+* `sync-rsync.executableShell`: The executable shell to run rsync in (e.g. /bin/bash)
 
 Default Site Options:
 
