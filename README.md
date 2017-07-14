@@ -24,7 +24,7 @@ Rsync installed both locally and remotely
 
 ## Extension Settings
 
-This extension contributes the following settings:
+This extension contributes the following settings (all optional):
 
 * `sync-rsync.autoShowOutput`: Auto show rsync output when rsync is working
 * `sync-rsync.autoHideOutput`: Auto hide rsync output when rsync is done
@@ -64,25 +64,19 @@ Example :
     "sync-rsync.delete": true,
     "sync-rsync.sites": [
         {
-            "remotePath":"user1@server1:/path1/",
+            "remotePath":"user1@server1:/path1/",   // Sync sync-rsync.local to user1@server1:/path1/ using port 1234
             "shell":"ssh -p 1234"
         },
         {
-            "remotePath":"user2@server2:/path2/",
+            "remotePath":"user2@server2:/path2/",  // Sync sync-rsync.local to user2@server2:/path2/
+        },
+        {
+            "localPath":"project/static/",
+            "remotePath":"user3server3:/static/", // Sync project/static/ to user3@server3:/static/
         }
     ]
 }
 ```
-
-## Debian Notes
-
-Because Debian links `/bin/sh` to `/bin/dash` and dash does not do process management for Sync Rsync to kill the running sync you must set 
-
-```
-"sync-rsync.executableShell": "/bin/bash"
-```
-
-See [Node Rsync](https://github.com/mattijs/node-rsync#executableshellshell)
 
 ## Windows Notes
 
@@ -92,12 +86,9 @@ If you are using rsync that uses cygwin you will need to set `"sync-rsync.local"
 "sync-rsync.local": "/cygdrive/c/Users/joe/Documents/projects/sync_test/"
 ```
 
-Because CMD does not do process management currently there is no way to kill a running sync
-
-
 ## Change Log
 
-### 0.16.0
+### 0.16.1
 
 Kill running sync
 

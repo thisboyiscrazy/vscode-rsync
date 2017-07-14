@@ -20,7 +20,7 @@ export class Site {
 
 }
 
-export default class Config {
+export class Config {
     autoShowOutput: boolean;
     autoHideOutput: boolean;
     onFileSave: boolean;

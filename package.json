@@ -2,7 +2,7 @@
   "name": "sync-rsync",
   "displayName": "Sync-Rsync",
   "description": "Sync with remote using rsync",
-  "version": "0.16.0",
+  "version": "0.16.1",
   "publisher": "vscode-ext",
   "repository": {
     "type": "git",
@@ -111,7 +111,7 @@
         "sync-rsync.sites": {
           "type": "array",
           "description": "Sites",
-          "default":[],
+          "default": [],
           "items": {
             "type": "object",
             "properties": {
@@ -121,9 +121,9 @@
                 "description": "Local location defaults to workspace (must end in path separator)"
               },
               "remotePath": {
-	              "type": "string",
-	              "default": null,
-	              "description": "Remote location (user@host:path) (must end in path separator)"
+                "type": "string",
+                "default": null,
+                "description": "Remote location (user@host:path) (must end in path separator)"
               },
               "deleteFiles": {
                 "type": "boolean",
