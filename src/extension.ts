@@ -15,7 +15,7 @@ import {
 import * as path from 'path';
 import * as debounce from 'lodash.debounce';
 import * as Rsync from 'rsync';
-import Config from './Config';
+import { Config, Site } from './Config';
 import * as child from 'child_process';
 
 const outputChannel: OutputChannel = vscWindow.createOutputChannel('Sync-Rsync');
@@ -26,7 +26,7 @@ const getConfig = (): Config => new Config(workspace.getConfiguration('sync-rsyn
 let currentSync: child.ChildProcess = undefined;
 let syncKilled = true;
 
-const runSync = function (rsync: Rsync, config: Config): Promise<boolean> {
+const runSync = function (rsync: Rsync, site: Site, config: Config): Promise<boolean> {
     return new Promise<boolean>(resolve => {
         const syncStartTime: Date = new Date();
         const isDryRun: boolean = rsync.isSet('n');
@@ -36,25 +36,25 @@ const runSync = function (rsync: Rsync, config: Config): Promise<boolean> {
         if (config.autoShowOutput) {
             outputChannel.show();
         }
-        
-        currentSync = rsync.execute(
-            (error, code, cmd): void => {
-                currentSync = undefined;
-                if (error) {
-                    vscWindow.showErrorMessage(error.message);
-                    resolve(false);
-                }
-                resolve(true);
-            },
-            (data: Buffer): void => {
+
+        let showOutput = (data: Buffer): void => {
                 outputChannel.append(data.toString());
-            },
-            (data: Buffer): void => {
-                outputChannel.append(data.toString());
-            },
-        );
+        };
+
+        currentSync = child.spawn('rsync',rsync.args(),{stdio: 'pipe', shell: site.executableShell});
+        currentSync.stdout.on('data',showOutput);
+        currentSync.stderr.on('data',showOutput);
+
+        currentSync.on('close', function(code) {
+            
+            if(code != 0) {
+                vscWindow.showErrorMessage("rsync return " + code);
+                resolve(false);
+            }
+            resolve(true);
+            
+        });
     });
-    
 };
 
 const sync = async function (config: Config, {down, dry}: {down: boolean, dry: boolean}): Promise<void> {
@@ -93,7 +93,6 @@ const sync = async function (config: Config, {down, dry}: {down: boolean, dry: b
         }
 
         rsync = rsync
-            .executableShell(site.executableShell)
             .flags(site.flags)
             .exclude(site.exclude)
             .progress();
@@ -110,7 +109,7 @@ const sync = async function (config: Config, {down, dry}: {down: boolean, dry: b
             rsync = rsync.chmod(site.chmod);
         }
 
-        let rtn = await runSync(rsync, config)
+        let rtn = await runSync(rsync, site, config)
         success = success && rtn;
     }
 
