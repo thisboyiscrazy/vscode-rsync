@@ -59,7 +59,7 @@ Sites have these options, they are all optional sync-rsync will use the defaults
 
 Example :
 
-```json
+```javascript
 {
     "sync-rsync.delete": true,
     "sync-rsync.sites": [
