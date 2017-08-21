@@ -57,6 +57,8 @@ Sites have these options, they are all optional sync-rsync will use the defaults
 * `shell`: Rsync's -e option e.g. ssh -p 1234
 * `chmod`: Rsync's --chmod option
 
+localPath and remotePath will replace ${workspaceRoot} with the current Workspace Path
+
 Example :
 
 ```javascript
@@ -87,6 +89,10 @@ If you are using rsync that uses cygwin you will need to set `"sync-rsync.local"
 ```
 
 ## Change Log
+
+### 0.17.0
+
+Replace of ${workspaceRoot}
 
 ### 0.16.1
 

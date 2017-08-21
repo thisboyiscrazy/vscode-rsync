@@ -62,10 +62,16 @@ export class Config {
         } else {
             workspaceLocal === null;
         }
+
+        
         
         for(let site of sites) {
             if(site.localPath === null) {
                 site.localPath = workspaceLocal;
+            }
+            if(workspaceLocal != null) {
+                site.localPath = site.localPath.replace("${workspaceRoot}",workspaceLocal);
+                site.remotePath = site.remotePath.replace("${workspaceRoot}",workspaceLocal);   
             }
         }
         
