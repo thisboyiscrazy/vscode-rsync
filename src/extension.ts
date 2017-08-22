@@ -92,6 +92,10 @@ const sync = async function (config: Config, {down, dry}: {down: boolean, dry: b
             rsync = rsync.dry();
         }
 
+        for(let option of site.options) {
+            rsync.set.apply(rsync,option)
+        }
+
         rsync = rsync
             .flags(site.flags)
             .exclude(site.exclude)

@@ -2,7 +2,7 @@
   "name": "sync-rsync",
   "displayName": "Sync-Rsync",
   "description": "Sync with remote using rsync",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "publisher": "vscode-ext",
   "repository": {
     "type": "git",
@@ -108,6 +108,14 @@
           "type": "string",
           "description": "Rsync's -e option e.g. ssh -p 1234"
         },
+        "sync-rsync.options": {
+          "type": "array",
+          "description": "Extra rsync options (not checked)",
+          "default": [],
+          "items": {
+            "type":"array"
+          }
+        },
         "sync-rsync.sites": {
           "type": "array",
           "description": "Sites",
@@ -154,6 +162,14 @@
               "shell": {
                 "type": "string",
                 "description": "Rsync's -e option e.g. ssh -p 1234"
+              },
+              "options": {
+                "type": "array",
+                "description": "Extra rsync options (not checked)",
+                "default": [],
+                "items": {
+                  "type":"array"
+                }
               }
             }
           }

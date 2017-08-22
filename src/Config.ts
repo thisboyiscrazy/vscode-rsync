@@ -15,7 +15,8 @@ export class Site {
         public exclude: Array<string>,
         public chmod: string,
         public shell: string,
-        public executableShell: string
+        public executableShell: string,
+        public options: Array<Array<any>>
     ) {}
 
 }
@@ -40,6 +41,7 @@ export class Config {
             config.get('chmod', undefined),
             config.get('shell', undefined),
             config.get('executableShell', undefined),
+            config.get('options', []),
         )
 
         let sites: Array<Site> = [];

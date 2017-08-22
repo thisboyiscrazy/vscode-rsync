@@ -40,6 +40,7 @@ Default Site Options:
 * `sync-rsync.exclude`: rsync exclude patterns e.g. [".git",".vscode"]
 * `sync-rsync.shell`: Rsync's -e option e.g. ssh -p 1234
 * `sync-rsync.chmod`: Rsync's --chmod option
+* `sync.rsync.options`: Array of extra rsync options, set each element using [rsync.set](https://github.com/mattijs/node-rsync#setoption-value)
 
 Sites (Completely Optional, If no sites are defined Sync Rsync creates one using defaults):
 
@@ -56,6 +57,7 @@ Sites have these options, they are all optional sync-rsync will use the defaults
 * `exclude`: rsync exclude patterns e.g. [".git",".vscode"]
 * `shell`: Rsync's -e option e.g. ssh -p 1234
 * `chmod`: Rsync's --chmod option
+* `options`: Array of extra rsync options, set each element using [rsync.set](https://github.com/mattijs/node-rsync#setoption-value)
 
 localPath and remotePath will replace ${workspaceRoot} with the current Workspace Path
 
@@ -89,6 +91,10 @@ If you are using rsync that uses cygwin you will need to set `"sync-rsync.local"
 ```
 
 ## Change Log
+
+### 0.18.0
+
+Extra rsync options
 
 ### 0.17.0
 
