@@ -73,7 +73,9 @@ export class Config {
             }
             if(workspaceLocal != null) {
                 site.localPath = site.localPath.replace("${workspaceRoot}",workspaceLocal);
-                site.remotePath = site.remotePath.replace("${workspaceRoot}",workspaceLocal);   
+                if(site.remotePath != null) {
+                    site.remotePath = site.remotePath.replace("${workspaceRoot}",workspaceLocal);   
+                }
             }
         }
         
