@@ -92,6 +92,10 @@ If you are using rsync that uses cygwin you will need to set `"sync-rsync.local"
 
 ## Change Log
 
+### 0.18.1
+
+commands fix
+
 ### 0.18.0
 
 Extra rsync options
