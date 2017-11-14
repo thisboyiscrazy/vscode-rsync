@@ -89,3 +89,7 @@ If you are using rsync that uses cygwin you will need to set `"sync-rsync.local"
 ```
 "sync-rsync.local": "/cygdrive/c/Users/joe/Documents/projects/sync_test/"
 ```
+
+## Mac OS Notes
+
+If you are using the `shell` option to do something like `ssh -p 123` you will most likely have the set `sync-rsync.executableShell` to `/bin/bash`
