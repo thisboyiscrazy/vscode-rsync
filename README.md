@@ -46,6 +46,25 @@ Sites (Completely Optional, If no sites are defined Sync Rsync creates one using
 
 * `sync-rsync.sites`: Multiple Site Support [Multiple Sites](#multiple-sites)
 
+## Workspaces
+
+For workspaces you have to define ```localPath``` and ```remotePath``` for each folder you want synced. e.g.
+
+```
+"settings": {
+	"sync-rsync.sites": [
+		{
+			"localPath": "/home/user/project/s1",
+			"remotePath": "user@server:/var/www/s1"
+		},
+		{
+			"localPath": "/home/joe/projects/t2",
+			"remotePath": "user@server:/var/www/s2"
+		}
+	]
+}
+```
+
 ## Multiple Sites
 
 Sites have these options, they are all optional sync-rsync will use the defaults if they are not defined:
