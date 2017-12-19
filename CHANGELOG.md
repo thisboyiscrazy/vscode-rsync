@@ -5,7 +5,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Change Log
 
-### 0.19
+### 0.19.0
 
 onSaveIndividual
 
