@@ -28,7 +28,8 @@ Overall Settings (all optional):
 
 * `sync-rsync.autoShowOutput`: Auto show rsync output when rsync is working
 * `sync-rsync.autoHideOutput`: Auto hide rsync output when rsync is done
-* `sync-rsync.onSave`: sync project on save (currently syncs entire project because I do not have an easy way to deal with excluded files)
+* `sync-rsync.onSave`: syncs entire local on save
+* `sync-rsync.onSaveIndividual`: syncs the changeed file on save (onSave takes presedence)
 * `sync-rsync.executableShell`: The executable shell to run rsync in (e.g. /bin/bash)
 
 Default Site Options:

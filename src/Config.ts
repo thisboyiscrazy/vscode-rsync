@@ -25,10 +25,12 @@ export class Config {
     autoShowOutput: boolean;
     autoHideOutput: boolean;
     onFileSave: boolean;
+    onFileSaveIndividual: boolean;
     sites: Array<Site>;
 
     constructor(config: WorkspaceConfiguration) {
         this.onFileSave = config.get('onSave', false);
+        this.onFileSaveIndividual = config.get('onSaveIndividual', false);
         this.autoShowOutput = config.get('autoShowOutput', false);
         this.autoHideOutput = config.get('autoHideOutput', false);
         

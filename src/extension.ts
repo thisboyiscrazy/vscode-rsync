@@ -10,7 +10,8 @@ import {
     Disposable,
     window as vscWindow,
     workspace,
-    commands
+    commands,
+    TextDocument
 } from 'vscode';
 import * as path from 'path';
 import * as debounce from 'lodash.debounce';
@@ -133,6 +134,85 @@ const sync = async function (config: Config, {down, dry}: {down: boolean, dry: b
     }
 };
 
+const syncFile = async function (config: Config, file: string): Promise<void> {
+    
+    statusBar.color = 'mediumseagreen';
+    statusBar.text = createStatusText('$(sync)');
+    
+    let success = true;
+    syncKilled = false;
+    statusBar.command = 'sync-rsync.killSync';
+
+    for(let site of config.sites) {
+
+        if (syncKilled) continue;
+
+        if(site.localPath === null) {
+            vscWindow.showErrorMessage('Sync-Rsync: you must have a folder open or configured local');
+            continue;
+        }
+
+        if(site.remotePath === null) {
+            vscWindow.showErrorMessage('Sync-Rsync: you must configure a remote');
+            continue;
+        }
+        
+        let path = site.localPath;
+
+        if(file.startsWith(path)) {
+        
+            let path_l = path.length;
+            let post = file.slice(path_l);
+            let local = path + post;
+            let remote = site.remotePath + post;
+
+            let rsync: Rsync = new Rsync();
+
+            rsync = rsync.source(local).destination(remote);
+
+            for(let option of site.options) {
+                rsync.set.apply(rsync,option)
+            }
+
+            rsync = rsync
+                .flags(site.flags)
+                .exclude(site.exclude)
+                .progress();
+
+            if (site.shell !== undefined) {
+                rsync = rsync.shell(site.shell);
+            }
+
+            if (site.deleteFiles) {
+                rsync = rsync.delete();
+            }
+
+            if (site.chmod !== undefined) {
+                rsync = rsync.chmod(site.chmod);
+            }
+
+            let rtn = await runSync(rsync, site, config)
+            success = success && rtn;
+        }
+    }
+
+    syncKilled = true;
+    statusBar.command = 'sync-rsync.showOutput';
+
+    if(success) {
+        if (config.autoHideOutput) {
+            outputChannel.hide();
+        }
+        statusBar.color = undefined;
+        statusBar.text = createStatusText('$(check)');
+    } else {
+        outputChannel.show();
+        statusBar.color = 'red';
+        statusBar.text = createStatusText('$(alert)');
+    }
+};
+
+
 const syncUp = (config: Config) => sync(config, {down: false, dry: false});
 const syncDown = (config: Config) => sync(config, {down: true, dry: false});
 const compareUp = (config: Config) => sync(config, {down: false, dry: true});
@@ -148,9 +228,11 @@ export function activate(context: ExtensionContext): void {
     });
 
     const debouncedSyncUp: (config: Config) => void = debounce(syncUp, 100); // debounce 100ms in case of 'Save All'
-    workspace.onDidSaveTextDocument((): void => {
-        if (config.onFileSave) {
+    workspace.onDidSaveTextDocument((doc: TextDocument): void => {
+        if (config.onFileSave && ! config.onFileSaveIndividual) {
             debouncedSyncUp(config);
+        } else if(config.onFileSaveIndividual) {
+            syncFile(config, doc.fileName);
         }
     });
 

@@ -58,6 +58,11 @@
         "sync-rsync.onSave": {
           "type": "boolean",
           "default": false,
+          "description": "Sync project on save"
+        },
+        "sync-rsync.onSaveIndividual": {
+          "type": "boolean",
+          "default": false,
           "description": "Sync file on save"
         },
         "sync-rsync.executableShell": {
