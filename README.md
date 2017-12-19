@@ -51,17 +51,27 @@ Sites (Completely Optional, If no sites are defined Sync Rsync creates one using
 For workspaces you have to define ```localPath``` and ```remotePath``` for each folder you want synced. e.g.
 
 ```
-"settings": {
-	"sync-rsync.sites": [
+{
+	"folders": [
 		{
-			"localPath": "/home/user/project/s1",
-			"remotePath": "user@server:/var/www/s1"
+			"path": "/home/user/project/s1"
 		},
 		{
-			"localPath": "/home/joe/projects/t2",
-			"remotePath": "user@server:/var/www/s2"
+			"path": "/home/user/projects/t2"
 		}
-	]
+	],
+    "settings": {
+    	"sync-rsync.sites": [
+    		{
+    			"localPath": "/home/user/project/s1",
+    			"remotePath": "user@server:/var/www/s1"
+    		},
+    		{
+    			"localPath": "/home/user/projects/t2",
+    			"remotePath": "user@server:/var/www/s2"
+    		}
+    	]
+    }
 }
 ```
 
