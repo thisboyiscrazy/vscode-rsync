@@ -40,7 +40,6 @@ Default Site Options:
 * `sync-rsync.flags`: rsync flags
 * `sync-rsync.exclude`: rsync exclude patterns e.g. [".git",".vscode"]
 * `sync-rsync.shell`: Rsync's -e option e.g. ssh -p 1234
-* `sync-rsync.afterSync`: a command to run after successful sync up (e.g. clear cache). First item in array is the command the rest are arguments. e.g.  ['ssh','user@server','~/cr.sh']
 * `sync-rsync.chmod`: Rsync's --chmod option
 * `sync.rsync.options`: Array of extra rsync options, set each element using [rsync.set](https://github.com/mattijs/node-rsync#setoption-value)
 
@@ -52,7 +51,7 @@ Sites (Completely Optional, If no sites are defined Sync Rsync creates one using
 
 For workspaces you have to define ```localPath``` and ```remotePath``` for each folder you want synced. e.g.
 
-```
+```javascript
 {
 	"folders": [
 		{
@@ -87,6 +86,8 @@ Sites have these options, they are all optional sync-rsync will use the defaults
 * `flags`: rsync flags
 * `exclude`: rsync exclude patterns e.g. [".git",".vscode"]
 * `shell`: Rsync's -e option e.g. ssh -p 1234
+* `afterSync`: a command to run after successful sync up (e.g. clear cache). First item in array is the command the rest are arguments. e.g.  ['ssh','user@server','~/cr.sh']
+
 * `chmod`: Rsync's --chmod option
 * `options`: Array of extra rsync options, set each element using [rsync.set](https://github.com/mattijs/node-rsync#setoption-value)
 
