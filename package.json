@@ -2,7 +2,7 @@
   "name": "sync-rsync",
   "displayName": "Sync-Rsync",
   "description": "Sync with remote using rsync",
-  "version": "0.19.0",
+  "version": "0.20.0",
   "publisher": "vscode-ext",
   "repository": {
     "type": "git",
@@ -163,6 +163,13 @@
               "shell": {
                 "type": "string",
                 "description": "Rsync's -e option e.g. ssh -p 1234"
+              },
+              "afterSync": {
+                "type": "array",
+                "description": "a command to run after successful sync up",
+                "items": {
+                  "type": "string"
+                }
               },
               "options": {
                 "type": "array",

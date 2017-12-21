@@ -16,6 +16,7 @@ export class Site {
         public chmod: string,
         public shell: string,
         public executableShell: string,
+        public afterSync: string[],
         public options: Array<Array<any>>
     ) {}
 
@@ -43,6 +44,7 @@ export class Config {
             config.get('chmod', undefined),
             config.get('shell', undefined),
             config.get('executableShell', undefined),
+            undefined,
             config.get('options', []),
         )
 

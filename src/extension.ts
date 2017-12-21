@@ -27,12 +27,9 @@ const getConfig = (): Config => new Config(workspace.getConfiguration('sync-rsyn
 let currentSync: child.ChildProcess = undefined;
 let syncKilled = true;
 
-const runSync = function (rsync: Rsync, site: Site, config: Config): Promise<boolean> {
+const execute = function( config: Config, cmd: string,args :string[] = [], shell: string = undefined): Promise<boolean> {
     return new Promise<boolean>(resolve => {
-        const syncStartTime: Date = new Date();
-        const isDryRun: boolean = rsync.isSet('n');
-        outputChannel.appendLine(`\n${syncStartTime.toString()} ${isDryRun ? 'comparing' : 'syncing'}`);
-        outputChannel.appendLine(`> ${rsync.command()}`);
+        outputChannel.appendLine(`> ${cmd} ${args.join(" ")} `);
 
         if (config.autoShowOutput) {
             outputChannel.show();
@@ -42,20 +39,33 @@ const runSync = function (rsync: Rsync, site: Site, config: Config): Promise<boo
                 outputChannel.append(data.toString());
         };
 
-        currentSync = child.spawn('rsync',rsync.args(),{stdio: 'pipe', shell: site.executableShell});
+        currentSync = child.spawn(cmd,args,{stdio: 'pipe', shell: shell});
         currentSync.stdout.on('data',showOutput);
         currentSync.stderr.on('data',showOutput);
 
         currentSync.on('close', function(code) {
-            
+
             if(code != 0) {
                 vscWindow.showErrorMessage("rsync return " + code);
                 resolve(false);
             }
             resolve(true);
-            
+
         });
     });
+}
+
+const runSync = function (rsync: Rsync, site: Site, config: Config): Promise<boolean> {
+    const syncStartTime: Date = new Date();
+    const isDryRun: boolean = rsync.isSet('n');
+    outputChannel.appendLine(`\n${syncStartTime.toString()} ${isDryRun ? 'comparing' : 'syncing'}`);
+    return execute(config,'rsync',rsync.args());
+};
+
+const runCommand = function (site: Site, config: Config): Promise<boolean> {
+    let command = site.afterSync[0];
+    let args = site.afterSync.slice(1);
+    return execute(config,command,args);
 };
 
 const sync = async function (config: Config, {down, dry}: {down: boolean, dry: boolean}): Promise<void> {
@@ -114,7 +124,10 @@ const sync = async function (config: Config, {down, dry}: {down: boolean, dry: b
             rsync = rsync.chmod(site.chmod);
         }
 
-        let rtn = await runSync(rsync, site, config)
+        let rtn = await runSync(rsync, site, config);
+        if(rtn && !down) {
+            rtn = await runCommand(site,config);
+        }
         success = success && rtn;
     }
 
