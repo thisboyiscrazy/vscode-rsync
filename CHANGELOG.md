@@ -5,6 +5,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Change Log
 
+### 0.21.0
+
+executable option.
+
+Should fix problems on windows.
+
 ### 0.20.0
 
 onSaveIndividual
