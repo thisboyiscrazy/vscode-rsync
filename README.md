@@ -16,7 +16,7 @@ With these commands:
 
 If no sync is running clicking the status bar item will show the output
 
-If a sync is running clicking the status bar item will kill the running sync, see [Debian Note](#debian-notes) and [Windows Notes](#windows-notes)
+If a sync is running clicking the status bar item will kill the running sync, see [Windows Notes](#windows-notes)
 
 ## Requirements
 
@@ -31,6 +31,7 @@ Overall Settings (all optional):
 * `sync-rsync.onSave`: syncs entire local on save
 * `sync-rsync.onSaveIndividual`: syncs the changeed file on save (onSave takes presedence)
 * `sync-rsync.executableShell`: The executable shell to run rsync in (e.g. /bin/bash)
+* `sync-rsync.executable`: The rsync executeable (e.g. rsync, C:\cygwin64\bin\rsync.exe)
 
 Default Site Options:
 
@@ -115,11 +116,17 @@ Example :
 
 ## Windows Notes
 
-If you are using rsync that uses cygwin you will need to set `"sync-rsync.local"` to use cygwin drives e.g.:
+If you are using rsync that uses cygwin you will need to set `sync-rsync.local` and `sync-rsync.remote` to use cygwin drives e.g.:
 
 ```
 "sync-rsync.local": "/cygdrive/c/Users/joe/Documents/projects/sync_test/"
 ```
+
+You may also need to set `sync-rsync.executable` to your cygwin rsync:
+```
+"sync-rsync.executable": "C:\cygwin64\bin\rsync.exe"
+```
+
 
 ## Mac OS Notes
 

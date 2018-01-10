@@ -29,6 +29,9 @@ let syncKilled = true;
 
 const execute = function( config: Config, cmd: string,args :string[] = [], shell: string = undefined): Promise<boolean> {
     return new Promise<boolean>(resolve => {
+
+        let error = false;
+
         outputChannel.appendLine(`> ${cmd} ${args.join(" ")} `);
 
         if (config.autoShowOutput) {
@@ -40,10 +43,19 @@ const execute = function( config: Config, cmd: string,args :string[] = [], shell
         };
 
         currentSync = child.spawn(cmd,args,{stdio: 'pipe', shell: shell});
+
+        currentSync.on('error',function(err: {code: string, message: string}) {
+            vscWindow.showErrorMessage("rsync return " + err.code);
+            outputChannel.append("ERROR > " + err.message);
+            error = true;
+            resolve(false);
+        });
         currentSync.stdout.on('data',showOutput);
         currentSync.stderr.on('data',showOutput);
 
         currentSync.on('close', function(code) {
+
+            if(error) return;
 
             if(code != 0) {
                 vscWindow.showErrorMessage("rsync return " + code);
@@ -59,7 +71,7 @@ const runSync = function (rsync: Rsync, site: Site, config: Config): Promise<boo
     const syncStartTime: Date = new Date();
     const isDryRun: boolean = rsync.isSet('n');
     outputChannel.appendLine(`\n${syncStartTime.toString()} ${isDryRun ? 'comparing' : 'syncing'}`);
-    return execute(config,'rsync',rsync.args());
+    return execute(config, site.executable, rsync.args());
 };
 
 const runCommand = function (site: Site, config: Config): Promise<boolean> {

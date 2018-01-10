@@ -69,6 +69,11 @@
           "type": "string",
           "description": "The executable shell to run rsync in"
         },
+        "sync-rsync.executable": {
+          "type": "string",
+          "description": "The rsync executable",
+          "default":"rsync"
+        },
         "sync-rsync.local": {
           "type": "string",
           "default": null,
