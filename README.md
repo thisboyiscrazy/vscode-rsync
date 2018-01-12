@@ -29,7 +29,7 @@ Overall Settings (all optional):
 * `sync-rsync.autoShowOutput`: Auto show rsync output when rsync is working.
 * `sync-rsync.autoHideOutput`: Auto hide rsync output when rsync is done.
 * `sync-rsync.onSave`: syncs entire local on save.
-* `sync-rsync.onSaveIndividual`: syncs the changeed file on save (onSave takes presedence).
+* `sync-rsync.onSaveIndividual`: syncs the changeed file on save (onSave takes presedence). (note: rsync error 3 is ignored because it might be excluded).
 * `sync-rsync.executableShell`: The executable shell to run rsync in (e.g. /bin/bash).
 * `sync-rsync.executable`: The rsync executeable (e.g. rsync, C:\cygwin64\bin\rsync.exe).
 * `sync-rsync.cygpath`: If using cygwin, this is the path to cygpath (e.g. C:\cygwin64\bin\cygpath.exe) used to translate windows paths to cywgin.

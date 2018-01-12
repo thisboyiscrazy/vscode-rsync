@@ -27,8 +27,8 @@ const getConfig = (): Config => new Config(workspace.getConfiguration('sync-rsyn
 let currentSync: child.ChildProcess = undefined;
 let syncKilled = true;
 
-const execute = function( config: Config, cmd: string,args :string[] = [], shell: string = undefined): Promise<boolean> {
-    return new Promise<boolean>(resolve => {
+const execute = function( config: Config, cmd: string,args :string[] = [], shell: string = undefined): Promise<number> {
+    return new Promise<number>(resolve => {
 
         let error = false;
 
@@ -45,10 +45,9 @@ const execute = function( config: Config, cmd: string,args :string[] = [], shell
         currentSync = child.spawn(cmd,args,{stdio: 'pipe', shell: shell});
 
         currentSync.on('error',function(err: {code: string, message: string}) {
-            vscWindow.showErrorMessage("rsync return " + err.code);
             outputChannel.append("ERROR > " + err.message);
             error = true;
-            resolve(false);
+            resolve(1);
         });
         currentSync.stdout.on('data',showOutput);
         currentSync.stderr.on('data',showOutput);
@@ -58,24 +57,23 @@ const execute = function( config: Config, cmd: string,args :string[] = [], shell
             if(error) return;
 
             if(code != 0) {
-                vscWindow.showErrorMessage("rsync return " + code);
-                resolve(false);
+                resolve(code);
             }
 
-            resolve(true);
+            resolve(0);
 
         });
     });
 }
 
-const runSync = function (rsync: Rsync, paths: string[], site: Site, config: Config): Promise<boolean> {
+const runSync = function (rsync: Rsync, paths: string[], site: Site, config: Config): Promise<number> {
     const syncStartTime: Date = new Date();
     const isDryRun: boolean = rsync.isSet('n');
     outputChannel.appendLine(`\n${syncStartTime.toString()} ${isDryRun ? 'comparing' : 'syncing'}`);
     return execute(config, site.executable, rsync.args().concat(paths));
 };
 
-const runCommand = function (site: Site, config: Config): Promise<boolean> {
+const runCommand = function (site: Site, config: Config): Promise<number> {
     let command = site.afterSync[0];
     let args = site.afterSync.slice(1);
     return execute(config,command,args);
@@ -140,10 +138,21 @@ const sync = async function (config: Config, {down, dry}: {down: boolean, dry: b
         }
 
         let rtn = await runSync(rsync, paths, site, config);
-        if(rtn && !down && site.afterSync) {
-            rtn = await runCommand(site,config);
+        if(rtn == 0) {
+            if(!down && site.afterSync) {
+                rtn = await runCommand(site,config);
+                if(rtn == 0) {
+                    success = success && true;
+                } else {
+                    vscWindow.showErrorMessage("afterSync return " + rtn);
+                }
+            }
+            success = success && true;
+        } else {
+            vscWindow.showErrorMessage("rsync return " + rtn);
+            success = false;
         }
-        success = success && rtn;
+        
     }
 
     syncKilled = true;
@@ -222,7 +231,13 @@ const syncFile = async function (config: Config, file: string): Promise<void> {
             }
 
             let rtn = await runSync(rsync, paths, site, config)
-            success = success && rtn;
+            //We can safly ignore error 3 because it might be excluded.
+            if((rtn == 0) || (rtn == 3)) {
+                success = success && true;
+            } else {
+                vscWindow.showErrorMessage("rsync return " + rtn);
+                success = false;
+            }
         }
     }
 
