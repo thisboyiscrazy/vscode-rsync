@@ -68,11 +68,11 @@ const execute = function( config: Config, cmd: string,args :string[] = [], shell
     });
 }
 
-const runSync = function (rsync: Rsync, site: Site, config: Config): Promise<boolean> {
+const runSync = function (rsync: Rsync, paths: string[], site: Site, config: Config): Promise<boolean> {
     const syncStartTime: Date = new Date();
     const isDryRun: boolean = rsync.isSet('n');
     outputChannel.appendLine(`\n${syncStartTime.toString()} ${isDryRun ? 'comparing' : 'syncing'}`);
-    return execute(config, site.executable, rsync.args());
+    return execute(config, site.executable, rsync.args().concat(paths));
 };
 
 const runCommand = function (site: Site, config: Config): Promise<boolean> {
@@ -92,6 +92,8 @@ const sync = async function (config: Config, {down, dry}: {down: boolean, dry: b
 
     for(let site of config.sites) {
 
+        let paths = [];
+
         if (syncKilled) continue;
 
         if(site.localPath === null) {
@@ -107,9 +109,9 @@ const sync = async function (config: Config, {down, dry}: {down: boolean, dry: b
         let rsync: Rsync = new Rsync();
 
         if (down) {
-            rsync = rsync.source(site.remotePath).destination(site.localPath);
+            paths = [site.remotePath,site.localPath];
         } else {
-            rsync = rsync.source(site.localPath).destination(site.remotePath);
+            paths = [site.localPath,site.remotePath];
         }
 
         if (dry) {
@@ -137,7 +139,7 @@ const sync = async function (config: Config, {down, dry}: {down: boolean, dry: b
             rsync = rsync.chmod(site.chmod);
         }
 
-        let rtn = await runSync(rsync, site, config);
+        let rtn = await runSync(rsync, paths, site, config);
         if(rtn && !down && site.afterSync) {
             rtn = await runCommand(site,config);
         }
@@ -171,6 +173,8 @@ const syncFile = async function (config: Config, file: string): Promise<void> {
 
     for(let site of config.sites) {
 
+        let paths = [];
+
         if (syncKilled) continue;
 
         if(site.localPath === null) {
@@ -194,7 +198,7 @@ const syncFile = async function (config: Config, file: string): Promise<void> {
 
             let rsync: Rsync = new Rsync();
 
-            rsync = rsync.source(local).destination(remote);
+            let paths = [local,remote];
 
             for(let option of site.options) {
                 rsync.set.apply(rsync,option)
@@ -217,7 +221,7 @@ const syncFile = async function (config: Config, file: string): Promise<void> {
                 rsync = rsync.chmod(site.chmod);
             }
 
-            let rtn = await runSync(rsync, site, config)
+            let rtn = await runSync(rsync, paths, site, config)
             success = success && rtn;
         }
     }
@@ -258,7 +262,7 @@ export function activate(context: ExtensionContext): void {
         if(config.onFileSave) {
             debouncedSyncUp(config);
         } else if(config.onFileSaveIndividual) {
-            syncFile(config, doc.fileName);
+            syncFile(config, config.translatePath(doc.fileName));
         }
     });
 

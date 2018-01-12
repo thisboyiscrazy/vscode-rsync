@@ -65,6 +65,10 @@
           "default": false,
           "description": "Sync file on save"
         },
+        "sync-rsync.cygpath": {
+          "type": "string",
+          "description": "If using cygwin, optional path to cygpath"
+        },
         "sync-rsync.executableShell": {
           "type": "string",
           "description": "The executable shell to run rsync in"
