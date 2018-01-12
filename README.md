@@ -62,18 +62,18 @@ For workspaces you have to define ```localPath``` and ```remotePath``` for each 
 			"path": "/home/user/projects/t2"
 		}
 	],
-    "settings": {
-    	"sync-rsync.sites": [
-    		{
-    			"localPath": "/home/user/project/s1",
-    			"remotePath": "user@server:/var/www/s1"
-    		},
-    		{
-    			"localPath": "/home/user/projects/t2",
-    			"remotePath": "user@server:/var/www/s2"
-    		}
-    	]
-    }
+	"settings": {
+		"sync-rsync.sites": [
+			{
+				"localPath": "/home/user/project/s1",
+				"remotePath": "user@server:/var/www/s1"
+			},
+			{
+				"localPath": "/home/user/projects/t2",
+				"remotePath": "user@server:/var/www/s2"
+			}
+		]
+	}
 }
 ```
 
@@ -127,6 +127,10 @@ You may also need to set `sync-rsync.executable` to your cygwin rsync:
 "sync-rsync.executable": "C:\cygwin64\bin\rsync.exe"
 ```
 
+If you are using ssh in cygwin you may need to set `sync-rsync.shell`
+```
+"sync-rsync.shell": "C:\\cygwin64\\bin\\ssh.exe"
+```
 
 ## Mac OS Notes
 
