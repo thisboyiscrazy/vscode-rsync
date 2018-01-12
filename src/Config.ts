@@ -4,6 +4,7 @@ import {
     workspace
 } from 'vscode';
 import * as path from 'path';
+import * as child from 'child_process';
 
 export class Site { 
     
@@ -29,16 +30,18 @@ export class Config {
     onFileSave: boolean;
     onFileSaveIndividual: boolean;
     sites: Array<Site>;
+    cygpath: string;
 
     constructor(config: WorkspaceConfiguration) {
         this.onFileSave = config.get('onSave', false);
         this.onFileSaveIndividual = config.get('onSaveIndividual', false);
         this.autoShowOutput = config.get('autoShowOutput', false);
         this.autoHideOutput = config.get('autoHideOutput', false);
+        this.cygpath = config.get('cygpath', undefined);
         
         let site_default = new Site(
-            config.get('local', null),
-            config.get('remote', null),
+            this.translatePath(config.get('local', null)),
+            this.translatePath(config.get('remote', null)),
             config.get('delete', false),
             config.get('flags', 'rlptzv'),
             config.get('exclude', ['.git', '.vscode']),
@@ -64,14 +67,14 @@ export class Config {
         }
 
         let workspaceLocal = workspace.rootPath
-        
+
         if (workspaceLocal !== undefined) {
             workspaceLocal += path.sep;
         } else {
             workspaceLocal === null;
         }
 
-        
+        workspaceLocal = this.translatePath(workspaceLocal);
         
         for(let site of sites) {
             if(site.localPath === null) {
@@ -86,5 +89,21 @@ export class Config {
         }
         
         this.sites = sites;
+    }
+
+    translatePath(path: string): string {
+        if(this.cygpath) {
+            let rtn = child.spawnSync(this.cygpath, [path]);
+            if(rtn.status != 0) {
+                throw new Error("Path Tranlate Issue");
+            }
+            if(rtn.error) {
+                throw rtn.error;
+            }
+            let s_rtn = rtn.stdout.toString();
+            s_rtn = s_rtn.trim();
+            return s_rtn;
+        }
+        return path;
     }
 }

@@ -2,7 +2,7 @@
   "name": "sync-rsync",
   "displayName": "Sync-Rsync",
   "description": "Sync with remote using rsync",
-  "version": "0.21.0",
+  "version": "0.22.0",
   "publisher": "vscode-ext",
   "repository": {
     "type": "git",
@@ -64,6 +64,10 @@
           "type": "boolean",
           "default": false,
           "description": "Sync file on save"
+        },
+        "sync-rsync.cygpath": {
+          "type": "string",
+          "description": "If using cygwin, optional path to cygpath"
         },
         "sync-rsync.executableShell": {
           "type": "string",
