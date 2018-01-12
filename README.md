@@ -26,27 +26,28 @@ Rsync installed both locally and remotely
 
 Overall Settings (all optional):
 
-* `sync-rsync.autoShowOutput`: Auto show rsync output when rsync is working
-* `sync-rsync.autoHideOutput`: Auto hide rsync output when rsync is done
-* `sync-rsync.onSave`: syncs entire local on save
-* `sync-rsync.onSaveIndividual`: syncs the changeed file on save (onSave takes presedence)
-* `sync-rsync.executableShell`: The executable shell to run rsync in (e.g. /bin/bash)
-* `sync-rsync.executable`: The rsync executeable (e.g. rsync, C:\cygwin64\bin\rsync.exe)
+* `sync-rsync.autoShowOutput`: Auto show rsync output when rsync is working.
+* `sync-rsync.autoHideOutput`: Auto hide rsync output when rsync is done.
+* `sync-rsync.onSave`: syncs entire local on save.
+* `sync-rsync.onSaveIndividual`: syncs the changeed file on save (onSave takes presedence).
+* `sync-rsync.executableShell`: The executable shell to run rsync in (e.g. /bin/bash).
+* `sync-rsync.executable`: The rsync executeable (e.g. rsync, C:\cygwin64\bin\rsync.exe).
+* `sync-rsync.cygpath`: If using cygwin, this is the path to cygpath (e.g. C:\cygwin64\bin\cygpath.exe) used to translate windows paths to cywgin.
 
 Default Site Options:
 
-* `sync-rsync.local`: the local location defaults to workspace (must end in path separator)
-* `sync-rsync.remote`: the rsync remote location e.g. user@remote:path (must end in path separator)
-* `sync-rsync.delete`: true or false if you want rsync to delete files
-* `sync-rsync.flags`: rsync flags
-* `sync-rsync.exclude`: rsync exclude patterns e.g. [".git",".vscode"]
-* `sync-rsync.shell`: Rsync's -e option e.g. ssh -p 1234
-* `sync-rsync.chmod`: Rsync's --chmod option
-* `sync.rsync.options`: Array of extra rsync options, set each element using [rsync.set](https://github.com/mattijs/node-rsync#setoption-value)
+* `sync-rsync.local`: the local location defaults to workspace (must end in path separator).
+* `sync-rsync.remote`: the rsync remote location e.g. user@remote:path (must end in path separator).
+* `sync-rsync.delete`: true or false if you want rsync to delete files.
+* `sync-rsync.flags`: rsync flags.
+* `sync-rsync.exclude`: rsync exclude patterns e.g. [".git",".vscode"].
+* `sync-rsync.shell`: Rsync's -e option e.g. ssh -p 1234.
+* `sync-rsync.chmod`: Rsync's --chmod option.
+* `sync.rsync.options`: Array of extra rsync options, set each element using [rsync.set](https://github.com/mattijs/node-rsync#setoption-value).
 
 Sites (Completely Optional, If no sites are defined Sync Rsync creates one using defaults):
 
-* `sync-rsync.sites`: Multiple Site Support [Multiple Sites](#multiple-sites)
+* `sync-rsync.sites`: Multiple Site Support [Multiple Sites](#multiple-sites).
 
 ## Workspaces
 
@@ -81,15 +82,15 @@ For workspaces you have to define ```localPath``` and ```remotePath``` for each 
 
 Sites have these options, they are all optional sync-rsync will use the defaults if they are not defined:
 
-* `localPath`: the local location defaults to workspace (must end in path separator)
-* `remotePath`: the rsync remote location e.g. user@remote:path (must end in path separator)
-* `deleteFiles`: true or false if you want rsync to delete files
-* `flags`: rsync flags
-* `exclude`: rsync exclude patterns e.g. [".git",".vscode"]
-* `shell`: Rsync's -e option e.g. ssh -p 1234
-* `afterSync`: a command to run after successful sync up (e.g. clear cache). First item in array is the command the rest are arguments. e.g.  ['ssh','user@server','~/cr.sh']
-* `chmod`: Rsync's --chmod option
-* `options`: Array of extra rsync options, set each element using [rsync.set](https://github.com/mattijs/node-rsync#setoption-value)
+* `localPath`: the local location defaults to workspace (must end in path separator).
+* `remotePath`: the rsync remote location e.g. user@remote:path (must end in path separator).
+* `deleteFiles`: true or false if you want rsync to delete files.
+* `flags`: rsync flags.
+* `exclude`: rsync exclude patterns e.g. [".git",".vscode"].
+* `shell`: Rsync's -e option e.g. ssh -p 1234.
+* `afterSync`: a command to run after successful sync up (e.g. clear cache). First item in array is the command the rest are arguments. e.g.  ['ssh','user@server','~/cr.sh'].
+* `chmod`: Rsync's --chmod option.
+* `options`: Array of extra rsync options, set each element using [rsync.set](https://github.com/mattijs/node-rsync#setoption-value).
 
 localPath and remotePath will replace ${workspaceRoot} with the current Workspace Path
 
@@ -116,17 +117,19 @@ Example :
 
 ## Windows Notes
 
-If you are using rsync that uses cygwin you will need to set `sync-rsync.local` and `sync-rsync.remote` to use cygwin drives e.g.:
+If using cywgin, `sync-rsync.cygpath` is needed for things like `onSaveIndividual` to work because cygwin uses diferent paths as windows.
+
+Here is as example config:
 
 ```
-"sync-rsync.local": "/cygdrive/c/Users/joe/Documents/projects/sync_test/"
+{
+    "sync-rsync.executable": "C:\\cygwin64\\bin\\rsync.exe",
+    "sync-rsync.shell": "/bin/ssh",
+    "sync-rsync.remote": "user@server:/home/user/",
+    "sync-rsync.local": "c:\\Users\\joe\\Documents\\projects\\sync_test\\",
+    "sync-rsync.cygpath": "C:\\cygwin64\\bin\\cygpath.exe"
+}
 ```
-
-You may also need to set `sync-rsync.executable` to your cygwin rsync:
-```
-"sync-rsync.executable": "C:\cygwin64\bin\rsync.exe"
-```
-
 
 ## Mac OS Notes
 

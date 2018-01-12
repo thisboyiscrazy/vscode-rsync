@@ -5,6 +5,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Change Log
 
+### 0.22.0
+
+cygpath option and fix issue #33
+
 ### 0.21.0
 
 executable option.
