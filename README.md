@@ -121,7 +121,7 @@ If using cywgin, `sync-rsync.cygpath` is needed for things like `onSaveIndividua
 
 Here is as example config:
 
-```
+```javascript
 {
     "sync-rsync.executable": "C:\\cygwin64\\bin\\rsync.exe",
     "sync-rsync.shell": "/bin/ssh",
@@ -131,14 +131,6 @@ Here is as example config:
 }
 ```
 
-<<<<<<< HEAD
-If you are using ssh in cygwin you may need to set `sync-rsync.shell`
-```
-"sync-rsync.shell": "C:\\cygwin64\\bin\\ssh.exe"
-```
-
-=======
->>>>>>> hotfix---issue-33
 ## Mac OS Notes
 
 If you are using the `shell` option to do something like `ssh -p 123` you will most likely have the set `sync-rsync.executableShell` to `/bin/bash`
