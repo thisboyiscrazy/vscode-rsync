@@ -61,6 +61,7 @@ const execute = function( config: Config, cmd: string,args :string[] = [], shell
                 vscWindow.showErrorMessage("rsync return " + code);
                 resolve(false);
             }
+
             resolve(true);
 
         });
@@ -137,7 +138,7 @@ const sync = async function (config: Config, {down, dry}: {down: boolean, dry: b
         }
 
         let rtn = await runSync(rsync, site, config);
-        if(rtn && !down) {
+        if(rtn && !down && site.afterSync) {
             rtn = await runCommand(site,config);
         }
         success = success && rtn;
@@ -254,7 +255,7 @@ export function activate(context: ExtensionContext): void {
 
     const debouncedSyncUp: (config: Config) => void = debounce(syncUp, 100); // debounce 100ms in case of 'Save All'
     workspace.onDidSaveTextDocument((doc: TextDocument): void => {
-        if (config.onFileSave && ! config.onFileSaveIndividual) {
+        if(config.onFileSave) {
             debouncedSyncUp(config);
         } else if(config.onFileSaveIndividual) {
             syncFile(config, doc.fileName);
