@@ -31,6 +31,7 @@ export class Config {
     onFileSaveIndividual: boolean;
     sites: Array<Site>;
     cygpath: string;
+    watchGlobs: Array<string>;
 
     constructor(config: WorkspaceConfiguration) {
         this.onFileSave = config.get('onSave', false);
@@ -38,6 +39,7 @@ export class Config {
         this.autoShowOutput = config.get('autoShowOutput', false);
         this.autoHideOutput = config.get('autoHideOutput', false);
         this.cygpath = config.get('cygpath', undefined);
+        this.watchGlobs = config.get('watchGlobs', []);
         
         let site_default = new Site(
             this.translatePath(config.get('local', null)),
