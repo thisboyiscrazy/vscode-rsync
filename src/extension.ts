@@ -16,8 +16,10 @@ import {
 import * as path from 'path';
 import * as debounce from 'lodash.debounce';
 import * as Rsync from 'rsync';
+import * as chokidar from 'chokidar';
 import { Config, Site } from './Config';
 import * as child from 'child_process';
+import { DH_UNABLE_TO_CHECK_GENERATOR } from 'constants';
 
 const outputChannel: OutputChannel = vscWindow.createOutputChannel('Sync-Rsync');
 const statusBar: StatusBarItem = vscWindow.createStatusBarItem(StatusBarAlignment.Right, 1);
@@ -257,22 +259,54 @@ const syncFile = async function (config: Config, file: string): Promise<void> {
     }
 };
 
-
 const syncUp = (config: Config) => sync(config, {down: false, dry: false});
 const syncDown = (config: Config) => sync(config, {down: true, dry: false});
 const compareUp = (config: Config) => sync(config, {down: false, dry: true});
 const compareDown = (config: Config) => sync(config, {down: true, dry: true});
+const debouncedSyncUp: (config: Config) => void = debounce(syncUp, 100); // debounce 100ms in case of 'Save All'
+
+const watch = (config: Config) => {
+    if (config.watchGlobs.length === 0) {
+        return null;
+    }
+
+    outputChannel.appendLine(`Activating watcher on globs: ${config.watchGlobs.join(', ')}`);
+
+    try {
+        const watcher = chokidar.watch(config.watchGlobs, {
+            cwd: workspace.rootPath,
+            ignoreInitial: true
+        });
+
+        watcher.on('all', (): void => {
+            debouncedSyncUp(config);
+        });
+    
+        return watcher;
+    } catch (error) {
+        outputChannel.appendLine(`Unable to create watcher: ${error}`);
+    }
+
+    return null;
+};
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: ExtensionContext): void {
     let config: Config = getConfig();
+    let watcher = null;
 
     workspace.onDidChangeConfiguration((): void => {
         config = getConfig();
+
+        if (watcher) {
+            outputChannel.appendLine('Closing watcher');
+            watcher.close();
+        }
+
+        watcher = watch(config);
     });
 
-    const debouncedSyncUp: (config: Config) => void = debounce(syncUp, 100); // debounce 100ms in case of 'Save All'
     workspace.onDidSaveTextDocument((doc: TextDocument): void => {
         if(config.onFileSave) {
             debouncedSyncUp(config);
@@ -312,6 +346,7 @@ export function activate(context: ExtensionContext): void {
     statusBar.command = 'sync-rsync.showOutput';
     statusBar.show();
     outputChannel.appendLine('Sync-Rsync started');
+    watcher = watch(config);
 }
 
 // this method is called when your extension is deactivated

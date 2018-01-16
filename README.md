@@ -33,6 +33,7 @@ Overall Settings (all optional):
 * `sync-rsync.executableShell`: The executable shell to run rsync in (e.g. /bin/bash).
 * `sync-rsync.executable`: The rsync executeable (e.g. rsync, C:\cygwin64\bin\rsync.exe).
 * `sync-rsync.cygpath`: If using cygwin, this is the path to cygpath (e.g. C:\cygwin64\bin\cygpath.exe) used to translate windows paths to cywgin.
+* `sync-rsync.watchGlobs`: Enables file system watcher on given glob patterns (may cause high CPU usage - use carefuly).
 
 Default Site Options:
 

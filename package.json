@@ -69,6 +69,15 @@
           "type": "string",
           "description": "If using cygwin, optional path to cygpath"
         },
+        "sync-rsync.watchGlobs": {
+          "type": "array",
+          "default": [],
+          "description": "Enables sync up on file system change for given glob patterns (use carefuly)",
+          "items": {
+            "type": "string",
+            "title": "glob pattern"
+          }
+        },
         "sync-rsync.executableShell": {
           "type": "string",
           "description": "The executable shell to run rsync in"
@@ -76,7 +85,7 @@
         "sync-rsync.executable": {
           "type": "string",
           "description": "The rsync executable",
-          "default":"rsync"
+          "default": "rsync"
         },
         "sync-rsync.local": {
           "type": "string",
@@ -123,7 +132,7 @@
           "description": "Extra rsync options (not checked)",
           "default": [],
           "items": {
-            "type":"array"
+            "type": "array"
           }
         },
         "sync-rsync.sites": {
@@ -185,7 +194,7 @@
                 "description": "Extra rsync options (not checked)",
                 "default": [],
                 "items": {
-                  "type":"array"
+                  "type": "array"
                 }
               }
             }
@@ -201,14 +210,15 @@
     "test": "node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
-    "@types/mocha": "^2.2.32",
-    "@types/node": "^6.0.40",
+    "@types/mocha": "^2.2.46",
+    "@types/node": "^6.0.96",
     "mocha": "^2.3.3",
-    "typescript": "^2.0.3",
-    "vscode": "^1.0.0"
+    "typescript": "^2.6.2",
+    "vscode": "^1.1.10"
   },
   "dependencies": {
-    "rsync": "^0.6.1",
-    "lodash.debounce": "^4.0.8"
+    "chokidar": "^2.0.0",
+    "lodash.debounce": "^4.0.8",
+    "rsync": "^0.6.1"
   }
 }
