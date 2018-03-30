@@ -29,6 +29,8 @@ export class Config {
     autoHideOutput: boolean;
     onFileSave: boolean;
     onFileSaveIndividual: boolean;
+    exclude: Array<string>;
+    shell: string;
     sites: Array<Site>;
     cygpath: string;
     watchGlobs: Array<string>;
@@ -38,6 +40,8 @@ export class Config {
         this.onFileSaveIndividual = config.get('onSaveIndividual', false);
         this.autoShowOutput = config.get('autoShowOutput', false);
         this.autoHideOutput = config.get('autoHideOutput', false);
+        this.exclude = config.get('exclude', ['.git', '.vscode']);
+        this.shell = config.get('shell', undefined);
         this.cygpath = config.get('cygpath', undefined);
         this.watchGlobs = config.get('watchGlobs', []);
         
@@ -46,9 +50,9 @@ export class Config {
             this.translatePath(config.get('remote', null)),
             config.get('delete', false),
             config.get('flags', 'rlptzv'),
-            config.get('exclude', ['.git', '.vscode']),
+            config.get('exclude', this.exclude),
             config.get('chmod', undefined),
-            config.get('shell', undefined),
+            config.get('shell', this.shell),
             config.get('executableShell', undefined),
             config.get('executable', 'rsync'),
             undefined,
