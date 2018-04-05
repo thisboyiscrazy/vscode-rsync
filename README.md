@@ -35,7 +35,7 @@ Overall Settings (all optional):
 * `sync-rsync.cygpath`: If using cygwin, this is the path to cygpath (e.g. C:\cygwin64\bin\cygpath.exe) used to translate windows paths to cywgin.
 * `sync-rsync.watchGlobs`: Enables file system watcher on given glob patterns (may cause high CPU usage - use carefuly).
 
-Default Site Options:
+Global site options (they will be used as the default for each site):
 
 * `sync-rsync.local`: the local location defaults to workspace (must end in path separator).
 * `sync-rsync.remote`: the rsync remote location e.g. user@remote:path (must end in path separator).
@@ -131,6 +131,23 @@ Here is as example config:
     "sync-rsync.cygpath": "C:\\cygwin64\\bin\\cygpath.exe"
 }
 ```
+
+Also because of a cygwin / nodejs problem some ssh parameters do not get passed correctly you may need to create a bash file sync-rsync calls e.g.:
+
+File: /bin/ssh_wrap.sh
+```bash
+#!/bin/bash
+/bin/ssh -i ~/my.sshkey.priv $@
+```
+
+Then:
+
+```javascript
+{
+    "sync-rsync.shell": "/bin/ssh_wrap.sh"
+}	
+```
+
 
 ## Mac OS Notes
 
