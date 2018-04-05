@@ -86,6 +86,8 @@ export class Config {
                 site.localPath = site.localPath.replace("${workspaceRoot}",workspaceLocal);
                 if(site.remotePath != null) {
                     site.remotePath = site.remotePath.replace("${workspaceRoot}",workspaceLocal);   
+                    site.remotePath = site.remotePath.replace("${workspaceFolder}",workspaceLocal);
+                    site.remotePath = site.remotePath.replace("${workspaceFolderBasename}",path.basename(workspace.rootPath));
                 }
             }
         }
