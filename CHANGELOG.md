@@ -5,6 +5,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Change Log
 
+### 0.24.0
+
+Add support for workspaceFolder and workspaceFolderBasename
+
 ### 0.23.0
 
 `sync-rsync.watchGlobs`
