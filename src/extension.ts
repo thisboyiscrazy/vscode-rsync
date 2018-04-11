@@ -44,7 +44,14 @@ const execute = function( config: Config, cmd: string,args :string[] = [], shell
                 outputChannel.append(data.toString());
         };
 
-        currentSync = child.spawn(cmd,args,{stdio: 'pipe', shell: shell});
+        if (process.platform === 'win32' && shell) {
+            // when the platform is win32, spawn would add /s /c flags, making it impossible for the 
+            // shell to be something other than cmd or powershell (e.g. bash)
+            args = ["\"", cmd].concat(args, "\"");
+            currentSync = child.spawn(shell + " -c", args, {stdio: 'pipe', shell: "cmd.exe"});
+        } else {
+            currentSync = child.spawn(cmd,args,{stdio: 'pipe', shell: shell});
+        }
 
         currentSync.on('error',function(err: {code: string, message: string}) {
             outputChannel.append("ERROR > " + err.message);
@@ -72,13 +79,13 @@ const runSync = function (rsync: Rsync, paths: string[], site: Site, config: Con
     const syncStartTime: Date = new Date();
     const isDryRun: boolean = rsync.isSet('n');
     outputChannel.appendLine(`\n${syncStartTime.toString()} ${isDryRun ? 'comparing' : 'syncing'}`);
-    return execute(config, site.executable, rsync.args().concat(paths));
+    return execute(config, site.executable, rsync.args().concat(paths), site.executableShell);
 };
 
 const runCommand = function (site: Site, config: Config): Promise<number> {
     let command = site.afterSync[0];
     let args = site.afterSync.slice(1);
-    return execute(config,command,args);
+    return execute(config,command,args, site.executableShell);
 };
 
 const sync = async function (config: Config, {down, dry}: {down: boolean, dry: boolean}): Promise<void> {
