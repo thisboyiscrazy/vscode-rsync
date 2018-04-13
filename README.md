@@ -124,30 +124,29 @@ Here is as example config:
 
 ```javascript
 {
-    "sync-rsync.executable": "C:\\cygwin64\\bin\\rsync.exe",
-    "sync-rsync.shell": "/bin/ssh",
-    "sync-rsync.remote": "user@server:/home/user/",
-    "sync-rsync.local": "c:\\Users\\joe\\Documents\\projects\\sync_test\\",
-    "sync-rsync.cygpath": "C:\\cygwin64\\bin\\cygpath.exe"
+    "sync-rsync.executable": "/bin/rsync",
+    "sync-rsync.shell": "/bin/ssh -p 2222",
+    "sync-rsync.remote": "root@server:/root/test/",
+    "sync-rsync.local": "c:\\Users\\root\\sync_test\\",
+    "sync-rsync.onSaveIndividual": true,
+    "sync-rsync.cygpath": "C:\\cygwin64\\bin\\cygpath.exe",
+    "sync-rsync.executableShell": "C:\\cygwin64\\bin\\bash.exe"
 }
 ```
 
-Also because of a cygwin / nodejs problem some ssh parameters do not get passed correctly you may need to create a bash file sync-rsync calls e.g.:
+If using WSL you must set ```"sync-rsync.executableShell``` to the bash executable (possibly ```C:\Windows\Sysnative\bash.exe``` or ```C:\Windows\System32\bash.exe```)
 
-File: /bin/ssh_wrap.sh
-```bash
-#!/bin/bash
-/bin/ssh -i ~/my.sshkey.priv $@
-```
-
-Then:
+Here is and example config:
 
 ```javascript
 {
-    "sync-rsync.shell": "/bin/ssh_wrap.sh"
-}	
+    "sync-rsync.shell": "ssh -p 2222",
+    "sync-rsync.remote": "root@server:/root/test/",
+    "sync-rsync.local": "/mnt/c/Users/root/test",
+    "sync-rsync.onSaveIndividual": true,
+    "sync-rsync.executableShell": "C:\\Windows\\Sysnative\\bash.exe"
+}
 ```
-
 
 ## Mac OS Notes
 

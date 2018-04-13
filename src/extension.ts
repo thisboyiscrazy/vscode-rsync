@@ -47,7 +47,7 @@ const execute = function( config: Config, cmd: string,args :string[] = [], shell
         if (process.platform === 'win32' && shell) {
             // when the platform is win32, spawn would add /s /c flags, making it impossible for the 
             // shell to be something other than cmd or powershell (e.g. bash)
-            args = ["\"", cmd].concat(args, "\"");
+            args = ["'", cmd].concat(args, "'");
             currentSync = child.spawn(shell + " -c", args, {stdio: 'pipe', shell: "cmd.exe"});
         } else {
             currentSync = child.spawn(cmd,args,{stdio: 'pipe', shell: shell});

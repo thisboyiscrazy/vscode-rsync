@@ -5,6 +5,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Change Log
 
+### 0.25.0
+
+Possible breaking changes
+Imporoved Cygwin and WSL support thanks @idanpa.
+
 ### 0.24.0
 
 Add support for workspaceFolder and workspaceFolderBasename
