@@ -67,12 +67,12 @@ For workspaces you have to define ```localPath``` and ```remotePath``` for each 
 	"settings": {
 		"sync-rsync.sites": [
 			{
-				"localPath": "/home/user/project/s1",
-				"remotePath": "user@server:/var/www/s1"
+				"localPath": "/home/user/project/s1/",
+				"remotePath": "user@server:/var/www/s1/"
 			},
 			{
-				"localPath": "/home/user/projects/t2",
-				"remotePath": "user@server:/var/www/s2"
+				"localPath": "/home/user/projects/t2/",
+				"remotePath": "user@server:/var/www/s2/"
 			}
 		]
 	}
