@@ -44,7 +44,7 @@ Global site options (they will be used as the default for each site):
 * `sync-rsync.exclude`: rsync exclude patterns e.g. [".git",".vscode"].
 * `sync-rsync.shell`: Rsync's -e option e.g. ssh -p 1234.
 * `sync-rsync.chmod`: Rsync's --chmod option.
-* `sync.rsync.options`: Array of extra rsync options, set each element using [rsync.set](https://github.com/mattijs/node-rsync#setoption-value).
+* `sync.rsync.options`: Array of extra rsync options, set each element using [rsync.set](https://github.com/mattijs/node-rsync#setoption-value). [Extra Options](#extra-options).
 
 Sites (Completely Optional, If no sites are defined Sync Rsync creates one using defaults):
 
@@ -91,7 +91,7 @@ Sites have these options, they are all optional sync-rsync will use the defaults
 * `shell`: Rsync's -e option e.g. ssh -p 1234.
 * `afterSync`: a command to run after successful sync up (e.g. clear cache). First item in array is the command the rest are arguments. e.g.  ['ssh','user@server','~/cr.sh'].
 * `chmod`: Rsync's --chmod option.
-* `options`: Array of extra rsync options, set each element using [rsync.set](https://github.com/mattijs/node-rsync#setoption-value).
+* `options`: Array of extra rsync options, set each element using [rsync.set](https://github.com/mattijs/node-rsync#setoption-value). See [Extra Options](#extra-options).
 
 localPath and remotePath will replace ${workspaceRoot} with the current Workspace Path
 
@@ -114,6 +114,20 @@ Example :
         }
     ]
 }
+```
+
+## Extra Options
+
+The `options` array is an array of arrays [rsync.set](https://github.com/mattijs/node-rsync#setoption-value) is call with each array spread as paramamiters e.g:
+
+```javascript
+	"settings": {
+		"sync-rsync.options": [
+            ['progress'],
+            ['exclude-from', '/path/to/exclude-file'],
+            ['delete'],
+        ]
+    }
 ```
 
 ## Windows Notes
