@@ -210,15 +210,13 @@
     "test": "node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
-    "@types/mocha": "^2.2.46",
-    "@types/node": "^6.0.96",
-    "mocha": "^2.3.3",
+    "@types/node": "^10.5.4",
     "typescript": "^2.6.2",
     "vscode": "^1.1.10"
   },
   "dependencies": {
-    "chokidar": "^2.0.0",
-    "lodash.debounce": "^4.0.8",
+    "chokidar": "^2.0.4",
+    "lodash": "^4.17.10",
     "rsync": "^0.6.1"
   }
 }
