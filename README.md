@@ -44,7 +44,7 @@ Global site options (they will be used as the default for each site):
 * `sync-rsync.exclude`: rsync exclude patterns e.g. [".git",".vscode"].
 * `sync-rsync.shell`: Rsync's -e option e.g. ssh -p 1234.
 * `sync-rsync.chmod`: Rsync's --chmod option.
-* `sync.rsync.options`: Array of extra rsync options, set each element using [rsync.set](https://github.com/mattijs/node-rsync#setoption-value). [Extra Options](#extra-options).
+* `sync.rsync.options`: Array of extra rsync options, set each element using [rsync.set](https://github.com/mattijs/node-rsync#setoption-value). See [Extra Options](#extra-options).
 
 Sites (Completely Optional, If no sites are defined Sync Rsync creates one using defaults):
 
