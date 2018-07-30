@@ -121,13 +121,12 @@ Example :
 The `options` array is an array of arrays [rsync.set](https://github.com/mattijs/node-rsync#setoption-value) is call with each array spread as paramamiters e.g:
 
 ```javascript
-	"settings": {
-		"sync-rsync.options": [
-            ['progress'],
-            ['exclude-from', '/path/to/exclude-file'],
-            ['delete'],
-        ]
-    }
+
+"sync-rsync.options": [
+    ['progress'],
+    ['exclude-from', '/path/to/exclude-file'],
+    ['delete'],
+]
 ```
 
 ## Windows Notes
