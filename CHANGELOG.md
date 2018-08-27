@@ -5,6 +5,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Change Log
 
+### 0.26.0
+
+Added notification option
+
 ### 0.25.0
 
 Possible breaking changes
