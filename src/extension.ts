@@ -173,6 +173,9 @@ const sync = async function (config: Config, {down, dry}: {down: boolean, dry: b
         }
         statusBar.color = undefined;
         statusBar.text = createStatusText('$(check)');
+        if(config.notification) {
+            vscWindow.showInformationMessage("Sync Completed");
+        }
     } else {
         outputChannel.show();
         statusBar.color = 'red';
@@ -259,6 +262,9 @@ const syncFile = async function (config: Config, file: string): Promise<void> {
         }
         statusBar.color = undefined;
         statusBar.text = createStatusText('$(check)');
+        if(config.notification) {
+            vscWindow.showInformationMessage("Synced " + file);
+        }
     } else {
         outputChannel.show();
         statusBar.color = 'red';

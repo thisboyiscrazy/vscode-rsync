@@ -26,6 +26,7 @@ Rsync installed both locally and remotely
 
 Overall Settings (all optional):
 
+* `sync-rsync.notification`: Show notifiactions for sync successes (failurers always show notifications)
 * `sync-rsync.autoShowOutput`: Auto show rsync output when rsync is working.
 * `sync-rsync.autoHideOutput`: Auto hide rsync output when rsync is done.
 * `sync-rsync.onSave`: syncs entire local on save.

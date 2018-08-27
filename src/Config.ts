@@ -25,6 +25,7 @@ export class Site {
 }
 
 export class Config {
+    notification: boolean;
     autoShowOutput: boolean;
     autoHideOutput: boolean;
     onFileSave: boolean;
@@ -36,6 +37,7 @@ export class Config {
     constructor(config: WorkspaceConfiguration) {
         this.onFileSave = config.get('onSave', false);
         this.onFileSaveIndividual = config.get('onSaveIndividual', false);
+        this.notification = config.get('notification', false);
         this.autoShowOutput = config.get('autoShowOutput', false);
         this.autoHideOutput = config.get('autoHideOutput', false);
         this.cygpath = config.get('cygpath', undefined);

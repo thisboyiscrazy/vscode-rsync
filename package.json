@@ -2,7 +2,7 @@
   "name": "sync-rsync",
   "displayName": "Sync-Rsync",
   "description": "Sync with remote using rsync",
-  "version": "0.25.1",
+  "version": "0.25.2",
   "publisher": "vscode-ext",
   "repository": {
     "type": "git",
@@ -45,6 +45,11 @@
       "type": "object",
       "title": "Sync-Rsync configuration",
       "properties": {
+        "sync-rsync.notification": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show notifications for sync"
+        },
         "sync-rsync.autoShowOutput": {
           "type": "boolean",
           "default": false,
