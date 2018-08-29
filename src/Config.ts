@@ -14,12 +14,14 @@ export class Site {
         public deleteFiles: boolean,
         public flags: string,
         public exclude: Array<string>,
+        public include: Array<string>,
         public chmod: string,
         public shell: string,
         public executableShell: string,
         public executable: string,
         public afterSync: string[],
-        public options: Array<Array<any>>
+        public options: Array<Array<String>>,
+        public args: Array<string>
     ) {}
 
 }
@@ -49,12 +51,14 @@ export class Config {
             config.get('delete', false),
             config.get('flags', 'rlptzv'),
             config.get('exclude', ['.git', '.vscode']),
+            config.get('include', []),
             config.get('chmod', undefined),
             config.get('shell', undefined),
             config.get('executableShell', undefined),
             config.get('executable', 'rsync'),
             undefined,
             config.get('options', []),
+            config.get('args', []),
         )
 
         let sites: Array<Site> = [];

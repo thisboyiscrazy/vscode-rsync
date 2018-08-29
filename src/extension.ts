@@ -79,7 +79,7 @@ const runSync = function (rsync: Rsync, paths: string[], site: Site, config: Con
     const syncStartTime: Date = new Date();
     const isDryRun: boolean = rsync.isSet('n');
     outputChannel.appendLine(`\n${syncStartTime.toString()} ${isDryRun ? 'comparing' : 'syncing'}`);
-    return execute(config, site.executable, rsync.args().concat(paths), site.executableShell);
+    return execute(config, site.executable, rsync.args().concat(site.args).concat(paths), site.executableShell);
 };
 
 const runCommand = function (site: Site, config: Config): Promise<number> {
@@ -131,9 +131,17 @@ const sync = async function (config: Config, {down, dry}: {down: boolean, dry: b
 
         rsync = rsync
             .flags(site.flags)
-            .exclude(site.exclude)
             .progress();
 
+        if(site.include.length > 0) {
+            rsync = rsync.include(site.include);
+        }
+    
+        if(site.exclude.length > 0) {
+            rsync = rsync.exclude(site.exclude);
+        }
+
+        
         if (site.shell !== undefined) {
             rsync = rsync.shell(site.shell);
         }
@@ -227,9 +235,17 @@ const syncFile = async function (config: Config, file: string): Promise<void> {
 
             rsync = rsync
                 .flags(site.flags)
-                .exclude(site.exclude)
                 .progress();
 
+            if(site.include.length > 0) {
+                rsync = rsync.include(site.include);
+            }
+
+            if(site.exclude.length > 0) {
+                rsync = rsync.exclude(site.exclude);
+            }
+
+            
             if (site.shell !== undefined) {
                 rsync = rsync.shell(site.shell);
             }

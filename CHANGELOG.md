@@ -5,6 +5,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Change Log
 
+### 0.27.0
+
+`sync-rsync.include`
+
+`sync-rsync.args`
+
+
 ### 0.26.0
 
 Added notification option

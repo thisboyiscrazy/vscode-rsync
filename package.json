@@ -124,6 +124,15 @@
             "title": "rsync exclude pattern"
           }
         },
+        "sync-rsync.include": {
+          "type": "array",
+          "default": [],
+          "description": "Rsync include patterns",
+          "items": {
+            "type": "string",
+            "title": "rsync include pattern"
+          }
+        },
         "sync-rsync.chmod": {
           "type": "string",
           "description": "Rsync's --chmod option"
@@ -138,6 +147,14 @@
           "default": [],
           "items": {
             "type": "array"
+          }
+        },
+        "sync-rsync.args": {
+          "type": "array",
+          "description": "rsync arguments to add",
+          "default": [],
+          "items": {
+            "type": "string"
           }
         },
         "sync-rsync.sites": {
@@ -179,6 +196,15 @@
                   "title": "rsync exclude pattern"
                 }
               },
+              "include": {
+                "type": "array",
+                "default": [],
+                "description": "Rsync include patterns",
+                "items": {
+                  "type": "string",
+                  "title": "rsync include pattern"
+                }
+              },
               "chmod": {
                 "type": "string",
                 "description": "Rsync's --chmod option"
@@ -200,6 +226,14 @@
                 "default": [],
                 "items": {
                   "type": "array"
+                }
+              },
+              "args": {
+                "type": "array",
+                "description": "rsync arguments to add",
+                "default": [],
+                "items": {
+                  "type": "string"
                 }
               }
             }
