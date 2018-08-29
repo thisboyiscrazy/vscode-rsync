@@ -42,8 +42,8 @@ Global site options (they will be used as the default for each site):
 * `sync-rsync.remote`: the rsync remote location e.g. user@remote:path (must end in path separator).
 * `sync-rsync.delete`: true or false if you want rsync to delete files.
 * `sync-rsync.flags`: rsync flags.
-* `sync-rsync.exclude`: rsync exclude patterns e.g. [".git",".vscode"] (includes happen before excludes) See [Includes / Excludes](#includes-excludes).
-* `sync-rsync.include`: rsync exclude patterns e.g. ["*/","**/*.php] (includes happen before excludes) See [Includes / Excludes](#includes-excludes).
+* `sync-rsync.exclude`: rsync exclude patterns e.g. [".git",".vscode"] (includes happen before excludes) See [Includes / Excludes](#includes--excludes).
+* `sync-rsync.include`: rsync exclude patterns e.g. ["*/","**/*.php] (includes happen before excludes) See [Includes / Excludes](#includes--excludes).
 * `sync-rsync.shell`: Rsync's -e option e.g. ssh -p 1234.
 * `sync-rsync.chmod`: Rsync's --chmod option.
 * `sync-rsync.options`: Array of extra rsync options, set each element using [rsync.set](https://github.com/mattijs/node-rsync#setoption-value). See [Extra Options](#extra-options).
@@ -90,8 +90,8 @@ Sites have these options, they are all optional sync-rsync will use the defaults
 * `remotePath`: the rsync remote location e.g. user@remote:path (must end in path separator).
 * `deleteFiles`: true or false if you want rsync to delete files.
 * `flags`: rsync flags.
-* `exclude`: rsync exclude patterns e.g. [".git",".vscode"] (includes happen before excludes) See [Includes / Excludes](#includes-excludes).
-* `include`: rsync exclude patterns e.g. ["*/","**/*.php] (includes happen before excludes) See [Includes / Excludes](#includes-excludes).
+* `exclude`: rsync exclude patterns e.g. [".git",".vscode"] (includes happen before excludes) See [Includes / Excludes](#includes--excludes).
+* `include`: rsync exclude patterns e.g. ["*/","**/*.php] (includes happen before excludes) See [Includes / Excludes](#includes--excludes).
 * `shell`: Rsync's -e option e.g. ssh -p 1234.
 * `afterSync`: a command to run after successful sync up (e.g. clear cache). First item in array is the command the rest are arguments. e.g.  ['ssh','user@server','~/cr.sh'].
 * `chmod`: Rsync's --chmod option.
