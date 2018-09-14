@@ -29,6 +29,7 @@ export class Site {
 export class Config {
     notification: boolean;
     autoShowOutput: boolean;
+    autoShowOutputOnError: boolean;
     autoHideOutput: boolean;
     onFileSave: boolean;
     onFileSaveIndividual: boolean;
@@ -41,6 +42,7 @@ export class Config {
         this.onFileSaveIndividual = config.get('onSaveIndividual', false);
         this.notification = config.get('notification', false);
         this.autoShowOutput = config.get('autoShowOutput', false);
+        this.autoShowOutputOnError = config.get('autoShowOutputOnError', true);
         this.autoHideOutput = config.get('autoHideOutput', false);
         this.cygpath = config.get('cygpath', undefined);
         this.watchGlobs = config.get('watchGlobs', []);
