@@ -2,7 +2,7 @@
   "name": "sync-rsync",
   "displayName": "Sync-Rsync",
   "description": "Sync with remote using rsync",
-  "version": "0.27.1",
+  "version": "0.28.0",
   "publisher": "vscode-ext",
   "repository": {
     "type": "git",
@@ -74,6 +74,16 @@
           "type": "boolean",
           "default": false,
           "description": "Sync file on save"
+        },
+        "sync-rsync.onLoadIndividual": {
+          "type": "boolean",
+          "default": false,
+          "description": "Sync file on load"
+        },
+        "sync-rsync.showProgress": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show progress during rsync"
         },
         "sync-rsync.cygpath": {
           "type": "string",
