@@ -33,6 +33,8 @@ export class Config {
     autoHideOutput: boolean;
     onFileSave: boolean;
     onFileSaveIndividual: boolean;
+    onFileLoadIndividual: boolean;
+    showProgress: boolean;
     sites: Array<Site>;
     cygpath: string;
     watchGlobs: Array<string>;
@@ -40,6 +42,8 @@ export class Config {
     constructor(config: WorkspaceConfiguration) {
         this.onFileSave = config.get('onSave', false);
         this.onFileSaveIndividual = config.get('onSaveIndividual', false);
+        this.onFileLoadIndividual = config.get('onLoadIndividual', false);
+        this.showProgress = config.get('showProgress', true);
         this.notification = config.get('notification', false);
         this.autoShowOutput = config.get('autoShowOutput', false);
         this.autoShowOutputOnError = config.get('autoShowOutputOnError', true);

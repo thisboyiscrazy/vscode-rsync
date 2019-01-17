@@ -131,7 +131,7 @@ const sync = async function (config: Config, {down, dry}: {down: boolean, dry: b
 
         rsync = rsync
             .flags(site.flags)
-            .progress();
+            .progress(config.showProgress);
 
         if(site.include.length > 0) {
             rsync = rsync.include(site.include);
@@ -193,7 +193,7 @@ const sync = async function (config: Config, {down, dry}: {down: boolean, dry: b
     }
 };
 
-const syncFile = async function (config: Config, file: string): Promise<void> {
+const syncFile = async function (config: Config, file: string, down: boolean): Promise<void> {
     
     statusBar.color = 'mediumseagreen';
     statusBar.text = createStatusText('$(sync)');
@@ -229,7 +229,7 @@ const syncFile = async function (config: Config, file: string): Promise<void> {
 
             let rsync: Rsync = new Rsync();
 
-            let paths = [local,remote];
+            let paths = down ? [remote,local] : [local,remote];
 
             for(let option of site.options) {
                 rsync.set.apply(rsync,option)
@@ -237,7 +237,7 @@ const syncFile = async function (config: Config, file: string): Promise<void> {
 
             rsync = rsync
                 .flags(site.flags)
-                .progress();
+                .progress(config.showProgress);
 
             if(site.include.length > 0) {
                 rsync = rsync.include(site.include);
@@ -344,7 +344,13 @@ export function activate(context: ExtensionContext): void {
         if(config.onFileSave) {
             debouncedSyncUp(config);
         } else if(config.onFileSaveIndividual) {
-            syncFile(config, config.translatePath(doc.fileName));
+            syncFile(config, config.translatePath(doc.fileName), false);
+        }
+    });
+
+    workspace.onDidOpenTextDocument((doc: TextDocument): void => {
+        if(config.onFileLoadIndividual) {
+            syncFile(config, config.translatePath(doc.fileName), true);
         }
     });
 

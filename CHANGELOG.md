@@ -5,6 +5,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Change Log
 
+### 0.28.0
+
+`sync-rsync.autoLoadIndividual` : do rsync on load to ensure the last file is available locally (defaults to false).
+`sync-rsync.showProgress` : show progress during rsync (defaults to true).
+
 ### 0.27.1
 
 `sync-rsync.autoShowOutputOnError`
