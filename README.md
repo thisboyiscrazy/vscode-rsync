@@ -31,7 +31,8 @@ Overall Settings (all optional):
 * `sync-rsync.autoShowOutputOnError`: Auto show rsync output on error.
 * `sync-rsync.autoHideOutput`: Auto hide rsync output when rsync is done.
 * `sync-rsync.onSave`: syncs entire local on save.
-* `sync-rsync.onSaveIndividual`: syncs the changeed file on save (onSave takes presedence). (note: rsync error 3 is ignored because it might be excluded).
+* `sync-rsync.onSaveIndividual`: syncs the changed file on save (onSave takes presedence). (note: rsync error 3 is ignored because it might be excluded).
+* `sync-rsync.onLoadIndividual`: syncs the opened file on load. (note: rsync error 3 is ignored because it might be excluded).
 * `sync-rsync.executableShell`: The executable shell to run rsync in (e.g. /bin/bash).
 * `sync-rsync.executable`: The rsync executeable (e.g. rsync, C:\cygwin64\bin\rsync.exe).
 * `sync-rsync.cygpath`: If using cygwin, this is the path to cygpath (e.g. C:\cygwin64\bin\cygpath.exe) used to translate windows paths to cywgin.
@@ -43,6 +44,7 @@ Global site options (they will be used as the default for each site):
 * `sync-rsync.remote`: the rsync remote location e.g. user@remote:path (must end in path separator).
 * `sync-rsync.delete`: true or false if you want rsync to delete files.
 * `sync-rsync.flags`: rsync flags.
+* `sync-rsync.showProgress`: show progress during rsync, by adding ```--progress```.
 * `sync-rsync.exclude`: rsync exclude patterns e.g. [".git",".vscode"] (includes happen before excludes) See [Includes / Excludes](#includes--excludes).
 * `sync-rsync.include`: rsync exclude patterns e.g. ["*/","**/*.php] (includes happen before excludes) See [Includes / Excludes](#includes--excludes).
 * `sync-rsync.shell`: Rsync's -e option e.g. ssh -p 1234.
