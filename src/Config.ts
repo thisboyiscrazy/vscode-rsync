@@ -38,6 +38,7 @@ export class Config {
     sites: Array<Site>;
     cygpath: string;
     watchGlobs: Array<string>;
+    useWSL: boolean;
 
     constructor(config: WorkspaceConfiguration) {
         this.onFileSave = config.get('onSave', false);
@@ -50,6 +51,7 @@ export class Config {
         this.autoHideOutput = config.get('autoHideOutput', false);
         this.cygpath = config.get('cygpath', undefined);
         this.watchGlobs = config.get('watchGlobs', []);
+        this.useWSL = config.get('useWSL', false);
         
         let site_default = new Site(
             this.translatePath(config.get('local', null)),

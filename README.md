@@ -37,6 +37,7 @@ Overall Settings (all optional):
 * `sync-rsync.executable`: The rsync executeable (e.g. rsync, C:\cygwin64\bin\rsync.exe).
 * `sync-rsync.cygpath`: If using cygwin, this is the path to cygpath (e.g. C:\cygwin64\bin\cygpath.exe) used to translate windows paths to cywgin.
 * `sync-rsync.watchGlobs`: Enables file system watcher on given glob patterns (may cause high CPU usage - use carefuly).
+* `sync-rsync.useWSL`: Use WSL for executing rsync. See [Windows Notes](#windows-notes)
 
 Global site options (they will be used as the default for each site):
 
@@ -174,17 +175,13 @@ Here is as example config:
 }
 ```
 
-If using WSL you must set ```"sync-rsync.executableShell``` to the bash executable (possibly ```C:\Windows\Sysnative\bash.exe``` or ```C:\Windows\System32\bash.exe```)
-
-Here is and example config:
+Here is and example config for WSL:
 
 ```javascript
 {
-    "sync-rsync.shell": "ssh -p 2222",
-    "sync-rsync.remote": "root@server:/root/test/",
-    "sync-rsync.local": "/mnt/c/Users/root/test",
-    "sync-rsync.onSaveIndividual": true,
-    "sync-rsync.executableShell": "C:\\Windows\\Sysnative\\bash.exe"
+    "sync-rsync.remote": "root@server:/root/folder/",
+    "sync-rsync.local": "/mnt/c/Users/root/folder/",
+    "sync-rsync.useWSL": true
 }
 ```
 

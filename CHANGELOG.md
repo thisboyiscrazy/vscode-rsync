@@ -5,6 +5,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Change Log
 
+### 0.29.0
+
+`sync-rsync.useWSL`: Use WSL for executing rsync. See [Windows Notes](#windows-notes)
+
 ### 0.28.0
 
 `sync-rsync.autoLoadIndividual` : do rsync on load to ensure the last file is available locally (defaults to false).

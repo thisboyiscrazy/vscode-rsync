@@ -172,6 +172,11 @@
             "type": "string"
           }
         },
+        "sync-rsync.useWSL": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use WSL"
+        },
         "sync-rsync.sites": {
           "type": "array",
           "description": "Sites",

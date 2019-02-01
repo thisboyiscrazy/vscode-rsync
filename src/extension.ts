@@ -2,7 +2,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import {
-    WorkspaceConfiguration,
     ExtensionContext,
     StatusBarAlignment,
     OutputChannel,
@@ -19,7 +18,6 @@ import * as Rsync from 'rsync';
 import * as chokidar from 'chokidar';
 import { Config, Site } from './Config';
 import * as child from 'child_process';
-import { DH_UNABLE_TO_CHECK_GENERATOR } from 'constants';
 
 const outputChannel: OutputChannel = vscWindow.createOutputChannel('Sync-Rsync');
 const statusBar: StatusBarItem = vscWindow.createStatusBarItem(StatusBarAlignment.Right, 1);
@@ -44,11 +42,16 @@ const execute = function( config: Config, cmd: string,args :string[] = [], shell
                 outputChannel.append(data.toString());
         };
 
+        
         if (process.platform === 'win32' && shell) {
+
             // when the platform is win32, spawn would add /s /c flags, making it impossible for the 
             // shell to be something other than cmd or powershell (e.g. bash)
             args = ["'", cmd].concat(args, "'");
-            currentSync = child.spawn(shell + " -c", args, {stdio: 'pipe', shell: "cmd.exe"});
+            currentSync = child.spawn(shell, args, {stdio: 'pipe', shell: "cmd.exe"});
+        } else if(process.platform === 'win32' && config.useWSL) {
+            args = [cmd].concat(args);
+            currentSync = child.spawn("wsl", args, {stdio: 'pipe', shell: "cmd.exe"});
         } else {
             currentSync = child.spawn(cmd,args,{stdio: 'pipe', shell: shell});
         }
