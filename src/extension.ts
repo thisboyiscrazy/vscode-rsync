@@ -19,6 +19,10 @@ import * as Rsync from 'rsync';
 import * as chokidar from 'chokidar';
 import { Config, Site } from './Config';
 import * as child from 'child_process';
+import { exists } from 'fs';
+import { promisify } from 'util';
+
+const path_exists = promisify(exists);
 
 const outputChannel: OutputChannel = vscWindow.createOutputChannel('Sync-Rsync');
 const statusBar: StatusBarItem = vscWindow.createStatusBarItem(StatusBarAlignment.Right, 1);
@@ -94,6 +98,11 @@ const runCommand = function (site: Site, config: Config): Promise<number> {
 
 const syncSite = async function (site: Site, config: Config, { down, dry }: { down: boolean, dry: boolean }): Promise<boolean> {
 
+    if(!(await path_exists(site.localPath))) {
+        outputChannel.appendLine(`\n${site.localPath} does not exist`);
+        return true;
+    }
+
     if(down && site.upOnly) {
         outputChannel.appendLine(`\n${site.remotePath} is upOnly`);
         return true;
@@ -102,7 +111,7 @@ const syncSite = async function (site: Site, config: Config, { down, dry }: { do
     if(!down && site.downOnly) {
         outputChannel.appendLine(`\n${site.remotePath} is downOnly`);
         return true;
-    }
+    } 
 
     let paths = [];
 

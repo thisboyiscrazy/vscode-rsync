@@ -5,6 +5,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Change Log
 
+### 0.33.0
+
+skip localPaths that do not exist
+
 ### 0.32.0
 
 automatically add trailing /
