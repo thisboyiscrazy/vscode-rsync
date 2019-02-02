@@ -2,7 +2,7 @@
   "name": "sync-rsync",
   "displayName": "Sync-Rsync",
   "description": "Sync with remote using rsync",
-  "version": "0.28.0",
+  "version": "0.30.0",
   "publisher": "vscode-ext",
   "repository": {
     "type": "git",
@@ -25,8 +25,16 @@
         "title": "Sync-Rsync: Sync Remote to Local"
       },
       {
+        "command": "sync-rsync.syncDownSingle",
+        "title": "Sync-Rsync: Sync Remote to Local (Single site)"
+      },
+      {
         "command": "sync-rsync.syncUp",
         "title": "Sync-Rsync: Sync Local to Remote"
+      },
+      {
+        "command": "sync-rsync.syncUpSingle",
+        "title": "Sync-Rsync: Sync Local to Remote (Single site)"
       },
       {
         "command": "sync-rsync.compareDown",
@@ -184,6 +192,21 @@
           "items": {
             "type": "object",
             "properties": {
+              "name": {
+                "type":"string",
+                "default": null,
+                "description": "Site Name"
+              },
+              "upOnly": {
+                "type":"boolean",
+                "default": false,
+                "description": "Only Sync Local to Remote"
+              },
+              "downOnly": {
+                "type":"boolean",
+                "default": false,
+                "description": "Only Sync Remote to Local"
+              },
               "localPath": {
                 "type": "string",
                 "default": null,

@@ -5,10 +5,14 @@ import {
 } from 'vscode';
 import * as path from 'path';
 import * as child from 'child_process';
+import { stringify } from 'querystring';
 
 export class Site { 
     
     constructor(
+        public name: string,
+        public upOnly: boolean,
+        public downOnly: boolean,
         public localPath: string,
         public remotePath: string,
         public deleteFiles: boolean,
@@ -39,6 +43,7 @@ export class Config {
     cygpath: string;
     watchGlobs: Array<string>;
     useWSL: boolean;
+    siteMap: Map<string, Site>;
 
     constructor(config: WorkspaceConfiguration) {
         this.onFileSave = config.get('onSave', false);
@@ -54,6 +59,9 @@ export class Config {
         this.useWSL = config.get('useWSL', false);
         
         let site_default = new Site(
+            config.get('name', null),
+            false,
+            false,
             this.translatePath(config.get('local', null)),
             this.translatePath(config.get('remote', null)),
             config.get('delete', false),
@@ -105,7 +113,16 @@ export class Config {
                 }
             }
         }
-        
+
+        var siteMap = new Map<string, Site>(); 
+
+        for(let s of sites) {
+            var s_key = s.name ? s.name : s.remotePath;
+            siteMap.set(s_key,s);
+        }
+
+        this.siteMap = siteMap;
+
         this.sites = sites;
     }
 

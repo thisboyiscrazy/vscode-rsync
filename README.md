@@ -9,7 +9,9 @@ This extension syncs with a remote server using rsync
 With these commands:
 
 * `Sync-Rsync: Sync Local to Remote`
+* `Sync-Rsync: Sync Local to Remote (Single)`
 * `Sync-Rsync: Sync Remote to local`
+* `Sync-Rsync: Sync Remote to local (Single)`
 * `Sync-Rsync: Compare Local to Remote` (dry run)
 * `Sync-Rsync: Compare Remote to local` (dry run)
 * `Sync-Rsync: Kills the current sync`
@@ -90,6 +92,10 @@ For workspaces you have to define ```localPath``` and ```remotePath``` for each 
 
 Sites have these options, they are all optional sync-rsync will use the defaults if they are not defined:
 
+* `name`: a Nickname for single site sync.
+* `upOnly`: this site only sync Local to Remote.
+* `downOnly`: this site only sync Remote to Local.
+* `localPath`: the local location defaults to workspace (must end in path separator).
 * `localPath`: the local location defaults to workspace (must end in path separator).
 * `remotePath`: the rsync remote location e.g. user@remote:path (must end in path separator).
 * `deleteFiles`: true or false if you want rsync to delete files.

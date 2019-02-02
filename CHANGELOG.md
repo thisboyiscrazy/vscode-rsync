@@ -5,6 +5,16 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Change Log
 
+### 0.30.0
+
+`Sync-Rsync: Sync Local to Remote (Single)`
+
+`Sync-Rsync: Sync Remote to local (Single)`
+
+`upOnly`: this site only sync Local to Remote.
+
+`downOnly`: this site only sync Remote to Local.
+
 ### 0.29.0
 
 `sync-rsync.useWSL`: Use WSL for executing rsync. See [Windows Notes](#windows-notes)
