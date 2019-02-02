@@ -106,6 +106,15 @@ export class Config {
             }
             if(workspaceLocal != null) {
                 site.localPath = site.localPath.replace("${workspaceRoot}",workspaceLocal);
+                
+                for(let i = 0; i < site.options.length; i ++) {
+                    const site_option = site.options[i];
+                    for(let j = 0; j < site_option.length; j++ ) {
+                        const option = site_option[j];
+                        site_option[j] = option.replace("${workspaceRoot}",workspaceLocal);
+                    }
+                }
+
                 if(site.remotePath != null) {
                     site.remotePath = site.remotePath.replace("${workspaceRoot}",workspaceLocal);   
                     site.remotePath = site.remotePath.replace("${workspaceFolder}",workspaceLocal);

@@ -5,6 +5,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Change Log
 
+### 0.31.0
+
+replace `${workspaceRoot}` in options
+
 ### 0.30.0
 
 `Sync-Rsync: Sync Local to Remote (Single)`
