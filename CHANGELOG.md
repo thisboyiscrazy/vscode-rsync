@@ -5,6 +5,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Change Log
 
+### 0.32.0
+
+automatically add trailing /
+
 ### 0.31.0
 
 replace `${workspaceRoot}` in options

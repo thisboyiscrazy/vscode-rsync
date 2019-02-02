@@ -121,6 +121,9 @@ export class Config {
                     site.remotePath = site.remotePath.replace("${workspaceFolderBasename}",path.basename(workspace.rootPath));
                 }
             }
+
+            if(site.localPath[site.localPath.length - 1] != '/') site.localPath + '/';
+            if(site.remotePath[site.remotePath.length - 1] != '/') site.remotePath + '/';
         }
 
         var siteMap = new Map<string, Site>(); 
