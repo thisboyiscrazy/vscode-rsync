@@ -2,7 +2,7 @@
   "name": "sync-rsync",
   "displayName": "Sync-Rsync",
   "description": "Sync with remote using rsync",
-  "version": "0.33.0",
+  "version": "0.34.0",
   "publisher": "vscode-ext",
   "repository": {
     "type": "git",
@@ -25,12 +25,20 @@
         "title": "Sync-Rsync: Sync Remote to Local"
       },
       {
+        "command": "sync-rsync.syncDownContext",
+        "title": "Sync Remote to Local"
+      },
+      {
         "command": "sync-rsync.syncDownSingle",
         "title": "Sync-Rsync: Sync Remote to Local (Single site)"
       },
       {
         "command": "sync-rsync.syncUp",
         "title": "Sync-Rsync: Sync Local to Remote"
+      },
+      {
+        "command": "sync-rsync.syncUpContext",
+        "title": "Sync Local to Remote"
       },
       {
         "command": "sync-rsync.syncUpSingle",
@@ -49,6 +57,28 @@
         "title": "Sync-Rsync: Kills the current sync"
       }
     ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "sync-rsync.syncDownContext",
+          "when": "false"
+        },
+        {
+          "command": "sync-rsync.syncUpContext",
+          "when": "false"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "sync-rsync.syncDownContext",
+          "group": "2_workspace"
+        },
+        {
+          "command": "sync-rsync.syncUpContext",
+          "group": "2_workspace"
+        }
+      ]
+    },
     "configuration": {
       "type": "object",
       "title": "Sync-Rsync configuration",

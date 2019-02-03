@@ -5,6 +5,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Change Log
 
+### 0.34.0
+
+Context Menus for sync
+
 ### 0.33.0
 
 skip localPaths that do not exist

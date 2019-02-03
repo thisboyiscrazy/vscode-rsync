@@ -19,7 +19,7 @@ import * as Rsync from 'rsync';
 import * as chokidar from 'chokidar';
 import { Config, Site } from './Config';
 import * as child from 'child_process';
-import { exists } from 'fs';
+import { exists, lstat } from 'fs';
 import { promisify } from 'util';
 
 const path_exists = promisify(exists);
@@ -433,11 +433,37 @@ export function activate(context: ExtensionContext): void {
     const syncDownCommand: Disposable = commands.registerCommand('sync-rsync.syncDown', (): void => {
         syncDown(config);
     });
+    const syncDownContextCommand: Disposable = commands.registerCommand('sync-rsync.syncDownContext', (i :{path}): void => {
+        lstat(i.path,(err,info) => {
+            if(err) return;
+            
+            var path = config.translatePath(i.path);
+
+            if(info.isDirectory()) {
+                if(path[path.length - 1] != '/') path += '/';
+            }
+            syncFile(config, path, true);
+        })
+        
+    });
     const syncDownSingleCommand: Disposable = commands.registerCommand('sync-rsync.syncDownSingle', (site: string): void => {
         syncSingle(config,true);
     });
     const syncUpCommand: Disposable = commands.registerCommand('sync-rsync.syncUp', (): void => {
         syncUp(config);
+    });
+    const syncUpContextCommand: Disposable = commands.registerCommand('sync-rsync.syncUpContext', (i :{path}): void => {
+        lstat(i.path,(err,info) => {
+            if(err) return;
+            
+            var path = config.translatePath(i.path);
+
+            if(info.isDirectory()) {
+                if(path[path.length - 1] != '/') path += '/';
+            }
+            syncFile(config, path, false);
+        })
+        
     });
     const syncUpSingleCommand: Disposable = commands.registerCommand('sync-rsync.syncUpSingle', (site: string): void => {
         syncSingle(config,false);
@@ -457,8 +483,10 @@ export function activate(context: ExtensionContext): void {
     });
 
     context.subscriptions.push(syncDownCommand);
+    context.subscriptions.push(syncDownContextCommand);
     context.subscriptions.push(syncDownSingleCommand);
     context.subscriptions.push(syncUpCommand);
+    context.subscriptions.push(syncUpContextCommand);
     context.subscriptions.push(syncUpSingleCommand);
     context.subscriptions.push(compareDownCommand);
     context.subscriptions.push(compareUpCommand);
