@@ -153,4 +153,20 @@ export class Config {
         }
         return path;
     }
+
+    unTranslatePath(path: string): string {
+        if(this.cygpath) {
+            let rtn = child.spawnSync(this.cygpath, ["-w",path]);
+            if(rtn.status != 0) {
+                throw new Error("Path Tranlate Issue");
+            }
+            if(rtn.error) {
+                throw rtn.error;
+            }
+            let s_rtn = rtn.stdout.toString();
+            s_rtn = s_rtn.trim();
+            return s_rtn;
+        }
+        return path;
+    }
 }

@@ -5,6 +5,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Change Log
 
+### 0.34.1
+
+Fix for when using cygwin
+
 ### 0.34.0
 
 Context Menus for sync
