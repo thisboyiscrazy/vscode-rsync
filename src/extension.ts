@@ -98,11 +98,6 @@ const runCommand = function (site: Site, config: Config): Promise<number> {
 
 const syncSite = async function (site: Site, config: Config, { down, dry }: { down: boolean, dry: boolean }): Promise<boolean> {
 
-    if(!(await path_exists(config.unTranslatePath(site.localPath)))) {
-        outputChannel.appendLine(`\n${site.localPath} does not exist`);
-        return true;
-    }
-
     if(down && site.upOnly) {
         outputChannel.appendLine(`\n${site.remotePath} is upOnly`);
         return true;

@@ -5,6 +5,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Change Log
 
+### 0.34.2
+
+removed skip localPaths that do not exist
+
+Could not do reliably with cygwin, wls, linux, and mac os
+
 ### 0.34.1
 
 Fix for when using cygwin

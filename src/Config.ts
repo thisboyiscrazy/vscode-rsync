@@ -5,7 +5,6 @@ import {
 } from 'vscode';
 import * as path from 'path';
 import * as child from 'child_process';
-import { stringify } from 'querystring';
 
 export class Site { 
     
@@ -87,7 +86,7 @@ export class Config {
                 let clone = Object.assign({},site_default);
                 clone = Object.assign(clone,site);
                 sites.push(clone);
-            }
+            }5
         }
 
         let workspaceLocal = workspace.rootPath
@@ -122,8 +121,8 @@ export class Config {
                 }
             }
 
-            if(site.localPath[site.localPath.length - 1] != '/') site.localPath += '/';
-            if(site.remotePath[site.remotePath.length - 1] != '/') site.remotePath += '/';
+            if(undefined != site.localPath && site.localPath[site.localPath.length - 1] != '/') site.localPath += '/';
+            if(undefined != site.remotePath && site.remotePath[site.remotePath.length - 1] != '/') site.remotePath += '/';
         }
 
         var siteMap = new Map<string, Site>(); 
