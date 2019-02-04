@@ -43,8 +43,8 @@ Overall Settings (all optional):
 
 Global site options (they will be used as the default for each site):
 
-* `sync-rsync.local`: the local location defaults to workspace.
-* `sync-rsync.remote`: the rsync remote location e.g. user@remote:path.
+* `sync-rsync.local`: the local location defaults to workspace.  (if missing / will be added to the end)
+* `sync-rsync.remote`: the rsync remote location e.g. user@remote:path.  (if missing / will be added to the end)
 * `sync-rsync.delete`: true or false if you want rsync to delete files.
 * `sync-rsync.flags`: rsync flags.
 * `sync-rsync.showProgress`: show progress during rsync, by adding ```--progress```.
@@ -95,8 +95,8 @@ Sites have these options, they are all optional sync-rsync will use the defaults
 * `name`: a Nickname for single site sync.
 * `upOnly`: this site only sync Local to Remote.
 * `downOnly`: this site only sync Remote to Local.
-* `localPath`: the local location defaults to workspace.
-* `remotePath`: the rsync remote location e.g. user@remote:path.
+* `localPath`: the local location defaults to workspace. (if missing / will be added to the end)
+* `remotePath`: the rsync remote location e.g. user@remote:path. (if missing / will be added to the end)
 * `deleteFiles`: true or false if you want rsync to delete files.
 * `flags`: rsync flags.
 * `exclude`: rsync exclude patterns e.g. [".git",".vscode"] (includes happen before excludes) See [Includes / Excludes](#includes--excludes).

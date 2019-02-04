@@ -148,12 +148,12 @@
         "sync-rsync.local": {
           "type": "string",
           "default": null,
-          "description": "Local location defaults to workspace (must end in path separator)"
+          "description": "Local location defaults to workspace (if missing / will be added to the end)"
         },
         "sync-rsync.remote": {
           "type": "string",
           "default": null,
-          "description": "Remote location (user@host:path) (must end in path separator)"
+          "description": "Remote location (user@host:path) (if missing / will be added to the end)"
         },
         "sync-rsync.delete": {
           "type": "boolean",
@@ -240,12 +240,12 @@
               "localPath": {
                 "type": "string",
                 "default": null,
-                "description": "Local location defaults to workspace (must end in path separator)"
+                "description": "Local location defaults to workspace (if missing / will be added to the end)"
               },
               "remotePath": {
                 "type": "string",
                 "default": null,
-                "description": "Remote location (user@host:path) (must end in path separator)"
+                "description": "Remote location (user@host:path) (if missing / will be added to the end)"
               },
               "deleteFiles": {
                 "type": "boolean",

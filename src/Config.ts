@@ -24,7 +24,8 @@ export class Site {
         public executable: string,
         public afterSync: string[],
         public options: Array<Array<String>>,
-        public args: Array<string>
+        public args: Array<string>,
+        public translatedLocalPath: string,
     ) {}
 
 }
@@ -61,8 +62,8 @@ export class Config {
             config.get('name', null),
             false,
             false,
-            this.translatePath(config.get('local', null)),
-            this.translatePath(config.get('remote', null)),
+            config.get('local', null),
+            config.get('remote', null),
             config.get('delete', false),
             config.get('flags', 'rlptzv'),
             config.get('exclude', ['.git', '.vscode']),
@@ -74,6 +75,7 @@ export class Config {
             undefined,
             config.get('options', []),
             config.get('args', []),
+            undefined
         )
 
         let sites: Array<Site> = [];
@@ -86,7 +88,7 @@ export class Config {
                 let clone = Object.assign({},site_default);
                 clone = Object.assign(clone,site);
                 sites.push(clone);
-            }5
+            }
         }
 
         let workspaceLocal = workspace.rootPath
@@ -96,8 +98,6 @@ export class Config {
         } else {
             workspaceLocal === null;
         }
-
-        workspaceLocal = this.translatePath(workspaceLocal);
         
         for(let site of sites) {
             if(site.localPath === null) {
@@ -107,10 +107,11 @@ export class Config {
                 site.localPath = site.localPath.replace("${workspaceRoot}",workspaceLocal);
                 
                 for(let i = 0; i < site.options.length; i ++) {
+                    let t_workspaceLocal = this.translatePath(workspaceLocal);
                     const site_option = site.options[i];
                     for(let j = 0; j < site_option.length; j++ ) {
                         const option = site_option[j];
-                        site_option[j] = option.replace("${workspaceRoot}",workspaceLocal);
+                        site_option[j] = option.replace("${workspaceRoot}",t_workspaceLocal);
                     }
                 }
 
@@ -121,8 +122,9 @@ export class Config {
                 }
             }
 
-            if(undefined != site.localPath && site.localPath[site.localPath.length - 1] != '/') site.localPath += '/';
-            if(undefined != site.remotePath && site.remotePath[site.remotePath.length - 1] != '/') site.remotePath += '/';
+            site.remotePath = this.ensureTralingSlash(site.remotePath);
+            site.translatedLocalPath = this.translatePath(site.localPath);
+            site.translatedLocalPath = this.ensureTralingSlash(site.translatedLocalPath);
         }
 
         var siteMap = new Map<string, Site>(); 
@@ -137,7 +139,18 @@ export class Config {
         this.sites = sites;
     }
 
+    ensureTralingSlash(path: string): string {
+        if(null == path) return null;
+        if(path[path.length - 1] != '/') path += '/';   
+        return path;
+    }
+
     translatePath(path: string): string {
+
+        if(path == null) return null;
+        
+        if(path[0] == '/') return path;
+
         if(this.cygpath) {
             let rtn = child.spawnSync(this.cygpath, [path]);
             if(rtn.status != 0) {
@@ -150,6 +163,21 @@ export class Config {
             s_rtn = s_rtn.trim();
             return s_rtn;
         }
+
+        if(this.useWSL) {
+            let r_path = path.replace(/\\/g,"\\\\");
+            let rtn = child.spawnSync("wsl", ["wslpath", r_path]);
+            if(rtn.status != 0) {
+                throw new Error("Path Tranlate Issue");
+            }
+            if(rtn.error) {
+                throw rtn.error;
+            }
+            let s_rtn = rtn.stdout.toString();
+            s_rtn = s_rtn.trim();
+            return s_rtn;
+        }
+
         return path;
     }
 

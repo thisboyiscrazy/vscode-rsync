@@ -13,7 +13,6 @@ import {
     TextDocument,
     window
 } from 'vscode';
-import * as path from 'path';
 import * as debounce from 'lodash.debounce';
 import * as Rsync from 'rsync';
 import * as chokidar from 'chokidar';
@@ -23,6 +22,7 @@ import { exists, lstat } from 'fs';
 import { promisify } from 'util';
 
 const path_exists = promisify(exists);
+const path_lstat = promisify(lstat);
 
 const outputChannel: OutputChannel = vscWindow.createOutputChannel('Sync-Rsync');
 const statusBar: StatusBarItem = vscWindow.createStatusBarItem(StatusBarAlignment.Right, 1);
@@ -117,6 +117,11 @@ const syncSite = async function (site: Site, config: Config, { down, dry }: { do
         return false;
     }
 
+    if (site.translatedLocalPath === null) {
+        vscWindow.showErrorMessage('Sync-Rsync: you must have a folder open or configured local');
+        return false;
+    }
+
     if (site.remotePath === null) {
         vscWindow.showErrorMessage('Sync-Rsync: you must configure a remote');
         return false;
@@ -125,9 +130,9 @@ const syncSite = async function (site: Site, config: Config, { down, dry }: { do
     let rsync: Rsync = new Rsync();
 
     if (down) {
-        paths = [site.remotePath, site.localPath];
+        paths = [site.remotePath, site.translatedLocalPath];
     } else {
-        paths = [site.localPath, site.remotePath];
+        paths = [site.translatedLocalPath, site.remotePath];
     }
 
     if (dry) {
@@ -225,8 +230,6 @@ const syncFile = async function (config: Config, file: string, down: boolean): P
 
     for (let site of config.sites) {
 
-        let paths = [];
-
         if (syncKilled) continue;
 
         if (site.localPath === null) {
@@ -239,7 +242,14 @@ const syncFile = async function (config: Config, file: string, down: boolean): P
             continue;
         }
 
-        let path = site.localPath;
+        let path = site.translatedLocalPath;
+
+        let info = await path_lstat(file);
+
+        file = config.translatePath(file);
+        if(info.isDirectory()) {
+            file = config.ensureTralingSlash(file);
+        }
 
         if (file.startsWith(path)) {
 
@@ -267,7 +277,6 @@ const syncFile = async function (config: Config, file: string, down: boolean): P
             if (site.exclude.length > 0) {
                 rsync = rsync.exclude(site.exclude);
             }
-
 
             if (site.shell !== undefined) {
                 rsync = rsync.shell(site.shell);
@@ -415,31 +424,21 @@ export function activate(context: ExtensionContext): void {
         if (config.onFileSave) {
             debouncedSyncUp(config);
         } else if (config.onFileSaveIndividual) {
-            syncFile(config, config.translatePath(doc.fileName), false);
+            syncFile(config, doc.fileName, false);
         }
     });
 
     workspace.onDidOpenTextDocument((doc: TextDocument): void => {
         if (config.onFileLoadIndividual) {
-            syncFile(config, config.translatePath(doc.fileName), true);
+            syncFile(config, doc.fileName, true);
         }
     });
 
     const syncDownCommand: Disposable = commands.registerCommand('sync-rsync.syncDown', (): void => {
         syncDown(config);
     });
-    const syncDownContextCommand: Disposable = commands.registerCommand('sync-rsync.syncDownContext', (i :{path}): void => {
-        lstat(i.path,(err,info) => {
-            if(err) return;
-            
-            var path = config.translatePath(i.path);
-
-            if(info.isDirectory()) {
-                if(path[path.length - 1] != '/') path += '/';
-            }
-            syncFile(config, path, true);
-        })
-        
+    const syncDownContextCommand: Disposable = commands.registerCommand('sync-rsync.syncDownContext', (i :{fsPath}): void => {
+        syncFile(config,i.fsPath,true);
     });
     const syncDownSingleCommand: Disposable = commands.registerCommand('sync-rsync.syncDownSingle', (site: string): void => {
         syncSingle(config,true);
@@ -447,18 +446,8 @@ export function activate(context: ExtensionContext): void {
     const syncUpCommand: Disposable = commands.registerCommand('sync-rsync.syncUp', (): void => {
         syncUp(config);
     });
-    const syncUpContextCommand: Disposable = commands.registerCommand('sync-rsync.syncUpContext', (i :{path}): void => {
-        lstat(i.path,(err,info) => {
-            if(err) return;
-            
-            var path = config.translatePath(i.path);
-
-            if(info.isDirectory()) {
-                if(path[path.length - 1] != '/') path += '/';
-            }
-            syncFile(config, path, false);
-        })
-        
+    const syncUpContextCommand: Disposable = commands.registerCommand('sync-rsync.syncUpContext', (i :{fsPath}): void => {
+        syncFile(config, i.fsPath, false);
     });
     const syncUpSingleCommand: Disposable = commands.registerCommand('sync-rsync.syncUpSingle', (site: string): void => {
         syncSingle(config,false);
