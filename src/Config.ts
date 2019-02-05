@@ -1,10 +1,16 @@
 import {
-    window,
     WorkspaceConfiguration,
     workspace
 } from 'vscode';
 import * as path from 'path';
 import * as child from 'child_process';
+import * as Rsync from 'rsync';
+
+import { exists, lstat } from 'fs';
+import { promisify } from 'util';
+
+const path_exists = promisify(exists);
+const path_lstat = promisify(lstat);
 
 export class Site { 
     
@@ -16,6 +22,7 @@ export class Site {
         public remotePath: string,
         public deleteFiles: boolean,
         public flags: string,
+        public progress: boolean,
         public exclude: Array<string>,
         public include: Array<string>,
         public chmod: string,
@@ -26,7 +33,88 @@ export class Site {
         public options: Array<Array<String>>,
         public args: Array<string>,
         public translatedLocalPath: string,
+        public config: Config,
     ) {}
+
+    async rsync(down: boolean, dry: boolean, path?: string): Promise<Rsync> {
+
+        if (this.translatedLocalPath === null) {
+            throw new Error('You must have a folder open or configured local');
+        }
+    
+        if (this.remotePath === null) {
+            throw new Error('You must configure a remote');
+        }
+
+        let local = this.translatedLocalPath;
+        let remote = this.remotePath;
+
+        if(path != undefined) {
+            
+            let info = await path_lstat(path);
+
+            path = this.config.translatePath(path);
+            if(info.isDirectory()) {
+                path = this.config.ensureTralingSlash(path);
+            }
+
+            if(!path.startsWith(local)) {
+                return null;
+            }
+
+            let path_l = local.length;
+            let post = path.slice(path_l);
+            local += post;
+            remote +=  post;
+        }
+
+        let rsync: Rsync = new Rsync();
+    
+        if (dry) {
+            rsync = rsync.dry();
+        }
+    
+        for (let option of this.options) {
+            rsync.set.apply(rsync, option)
+        }
+    
+        rsync = rsync
+            .flags(this.flags)
+            .progress(this.progress);
+    
+        if (this.include.length > 0) {
+            rsync = rsync.include(this.include);
+        }
+    
+        if (this.exclude.length > 0) {
+            rsync = rsync.exclude(this.exclude);
+        }
+    
+        if (this.shell !== undefined) {
+            rsync = rsync.shell(this.shell);
+        }
+    
+        if (this.deleteFiles) {
+            rsync = rsync.delete();
+        }
+    
+        if (this.chmod !== undefined) {
+            rsync = rsync.chmod(this.chmod);
+        }
+
+        if (down) {
+            rsync = rsync
+                .source(remote)
+                .destination(local)
+        } else {
+            rsync = rsync
+                .source(remote)
+                .destination(local)
+        }
+
+        return rsync;
+    
+    }
 
 }
 
@@ -66,6 +154,7 @@ export class Config {
             config.get('remote', null),
             config.get('delete', false),
             config.get('flags', 'rlptzv'),
+            this.showProgress,
             config.get('exclude', ['.git', '.vscode']),
             config.get('include', []),
             config.get('chmod', undefined),
@@ -75,7 +164,8 @@ export class Config {
             undefined,
             config.get('options', []),
             config.get('args', []),
-            undefined
+            undefined,
+            this
         )
 
         let sites: Array<Site> = [];
@@ -154,7 +244,7 @@ export class Config {
         if(this.cygpath) {
             let rtn = child.spawnSync(this.cygpath, [path]);
             if(rtn.status != 0) {
-                throw new Error("Path Tranlate Issue");
+                throw new Error("Path Tranlate Issue:" + rtn.stderr.toString());
             }
             if(rtn.error) {
                 throw rtn.error;
@@ -168,7 +258,7 @@ export class Config {
             let r_path = path.replace(/\\/g,"\\\\");
             let rtn = child.spawnSync("wsl", ["wslpath", r_path]);
             if(rtn.status != 0) {
-                throw new Error("Path Tranlate Issue");
+                throw new Error("Path Tranlate Issue:" + rtn.stderr.toString());
             }
             if(rtn.error) {
                 throw rtn.error;
@@ -181,19 +271,6 @@ export class Config {
         return path;
     }
 
-    unTranslatePath(path: string): string {
-        if(this.cygpath) {
-            let rtn = child.spawnSync(this.cygpath, ["-w",path]);
-            if(rtn.status != 0) {
-                throw new Error("Path Tranlate Issue");
-            }
-            if(rtn.error) {
-                throw rtn.error;
-            }
-            let s_rtn = rtn.stdout.toString();
-            s_rtn = s_rtn.trim();
-            return s_rtn;
-        }
-        return path;
-    }
+    checkPath
+
 }
