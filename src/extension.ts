@@ -53,7 +53,7 @@ const execute = function (config: Config, cmd: string, args: string[] = [], shel
             // when the platform is win32, spawn would add /s /c flags, making it impossible for the 
             // shell to be something other than cmd or powershell (e.g. bash)
             args = ["'", cmd].concat(args, "'");
-            currentSync = child.spawn(shell, args, { stdio: 'pipe', shell: "cmd.exe" });
+            currentSync = child.spawn(shell + " -c", args, { stdio: 'pipe', shell: "cmd.exe" });
         } else if (process.platform === 'win32' && config.useWSL) {
             args = [cmd].concat(args);
             currentSync = child.spawn("wsl", args, { stdio: 'pipe', shell: "cmd.exe" });

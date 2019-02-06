@@ -5,6 +5,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Change Log
 
+### 0.34.3
+
+Fix for breaking cygwin
+
 ### 0.34.2
 
 removed skip localPaths that do not exist

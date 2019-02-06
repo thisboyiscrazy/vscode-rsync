@@ -100,7 +100,7 @@ export class Config {
         workspaceLocal = this.translatePath(workspaceLocal);
         
         for(let site of sites) {
-            if(site.localPath === null) {
+            if(site.localPath === null || site.localPath == "null") {
                 site.localPath = workspaceLocal;
             }
             if(workspaceLocal != null) {
