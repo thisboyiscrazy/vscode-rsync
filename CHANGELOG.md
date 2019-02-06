@@ -5,6 +5,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Change Log
 
+### 0.34.4
+
+Fix for util.promisify not being present in older VSCode
+
 ### 0.34.3
 
 Fix for breaking cygwin

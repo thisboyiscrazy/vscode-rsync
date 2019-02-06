@@ -20,9 +20,12 @@ import * as chokidar from 'chokidar';
 import { Config, Site } from './Config';
 import * as child from 'child_process';
 import { exists, lstat } from 'fs';
-import { promisify } from 'util';
+import * as util from 'util';
 
-const path_exists = promisify(exists);
+//Shim for older VSCode
+require("util.promisify").shim();
+
+const path_exists = util.promisify(exists);
 
 const outputChannel: OutputChannel = vscWindow.createOutputChannel('Sync-Rsync');
 const statusBar: StatusBarItem = vscWindow.createStatusBarItem(StatusBarAlignment.Right, 1);

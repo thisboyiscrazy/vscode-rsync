@@ -2,7 +2,7 @@
   "name": "sync-rsync",
   "displayName": "Sync-Rsync",
   "description": "Sync with remote using rsync",
-  "version": "0.34.3",
+  "version": "0.34.4",
   "publisher": "vscode-ext",
   "repository": {
     "type": "git",
@@ -223,17 +223,17 @@
             "type": "object",
             "properties": {
               "name": {
-                "type":"string",
+                "type": "string",
                 "default": null,
                 "description": "Site Name"
               },
               "upOnly": {
-                "type":"boolean",
+                "type": "boolean",
                 "default": false,
                 "description": "Only Sync Local to Remote"
               },
               "downOnly": {
-                "type":"boolean",
+                "type": "boolean",
                 "default": false,
                 "description": "Only Sync Remote to Local"
               },
@@ -329,6 +329,7 @@
   "dependencies": {
     "chokidar": "^2.0.4",
     "lodash": "^4.17.10",
-    "rsync": "^0.6.1"
+    "rsync": "^0.6.1",
+    "util.promisify": "^1.0.0"
   }
 }
