@@ -5,6 +5,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Change Log
 
+### 0.34.5
+
+Fix for wls and cygwin path translate
+
 ### 0.34.4
 
 Fix for util.promisify not being present in older VSCode

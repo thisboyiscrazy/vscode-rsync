@@ -226,6 +226,8 @@ const syncFile = async function (config: Config, file: string, down: boolean): P
     syncKilled = false;
     statusBar.command = 'sync-rsync.killSync';
 
+    let sync_file = false;
+
     for (let site of config.sites) {
 
         let paths = [];
@@ -244,7 +246,11 @@ const syncFile = async function (config: Config, file: string, down: boolean): P
 
         let path = site.localPath;
 
+        file = config.translatePath(file);
+
         if (file.startsWith(path)) {
+
+            sync_file = true;
 
             let path_l = path.length;
             let post = file.slice(path_l);
@@ -298,21 +304,23 @@ const syncFile = async function (config: Config, file: string, down: boolean): P
     syncKilled = true;
     statusBar.command = 'sync-rsync.showOutput';
 
-    if (success) {
-        if (config.autoHideOutput) {
-            outputChannel.hide();
+    if(sync_file) {
+        if (success) {
+            if (config.autoHideOutput) {
+                outputChannel.hide();
+            }
+            statusBar.color = undefined;
+            statusBar.text = createStatusText('$(check)');
+            if (config.notification) {
+                vscWindow.showInformationMessage("Synced " + file);
+            }
+        } else {
+            if (config.autoShowOutputOnError) {
+                outputChannel.show();
+            }
+            statusBar.color = 'red';
+            statusBar.text = createStatusText('$(alert)');
         }
-        statusBar.color = undefined;
-        statusBar.text = createStatusText('$(check)');
-        if (config.notification) {
-            vscWindow.showInformationMessage("Synced " + file);
-        }
-    } else {
-        if (config.autoShowOutputOnError) {
-            outputChannel.show();
-        }
-        statusBar.color = 'red';
-        statusBar.text = createStatusText('$(alert)');
     }
 };
 
