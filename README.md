@@ -24,6 +24,10 @@ If a sync is running clicking the status bar item will kill the running sync, se
 
 Rsync installed both locally and remotely
 
+If you are using wsl, wslpath maybe required. (Windows 10 1803 or higher). Or you can install this https://github.com/laurent22/wslpath/blob/master/wslpath which requires php.
+
+If using cygwin, cygpath maybe required.
+
 ## Extension Settings
 
 Overall Settings (all optional):
