@@ -60,8 +60,8 @@ export class Config {
             config.get('name', null),
             false,
             false,
-            this.translatePath(config.get('local', null)),
-            this.translatePath(config.get('remote', null)),
+            config.get('local', null),
+            config.get('remote', null),
             config.get('delete', false),
             config.get('flags', 'rlptzv'),
             config.get('exclude', ['.git', '.vscode']),
@@ -120,6 +120,8 @@ export class Config {
                 }
             }
 
+            site.localPath = this.translatePath(site.localPath);
+            
             if(undefined != site.localPath && site.localPath[site.localPath.length - 1] != '/') site.localPath += '/';
             if(undefined != site.remotePath && site.remotePath[site.remotePath.length - 1] != '/') site.remotePath += '/';
         }
