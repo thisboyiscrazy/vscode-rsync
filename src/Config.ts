@@ -22,7 +22,7 @@ export class Site {
         public executableShell: string,
         public executable: string,
         public afterSync: string[],
-        public options: Array<Array<String>>,
+        public options: Array<Array<string>>,
         public args: Array<string>
     ) {}
 
@@ -42,6 +42,8 @@ export class Config {
     watchGlobs: Array<string>;
     useWSL: boolean;
     siteMap: Map<string, Site>;
+    _workspaceFolder: string = workspace.rootPath ? workspace.rootPath : "";
+    _workspaceFolderBasename: string = workspace.rootPath ? path.basename(workspace.rootPath) : "";
 
     constructor(config: WorkspaceConfiguration) {
         this.onFileSave = config.get('onSave', false);
@@ -95,24 +97,19 @@ export class Config {
                 site.localPath = workspaceLocal;
             }
             if(workspaceLocal != null) {
-                site.localPath = site.localPath.replace("${workspaceRoot}",workspaceLocal);
+                site.localPath = this.expandVars(site.localPath)
                 
                 for(let i = 0; i < site.options.length; i ++) {
                     const site_option = site.options[i];
                     for(let j = 0; j < site_option.length; j++ ) {
-                        let option = site_option[j];
-                        option = option.replace("${workspaceRoot}",workspaceLocal);
-                        option = option.replace("${workspaceFolder}",workspaceLocal);
-                        site_option[j] = option;
+                        site_option[j] = this.expandVars(site_option[j]);
                     }
                 }
 
                 if(site.remotePath != null) {
-                    site.remotePath = site.remotePath.replace("${workspaceRoot}",workspaceLocal);   
-                    site.remotePath = site.remotePath.replace("${workspaceFolder}",workspaceLocal);
-                    site.remotePath = site.remotePath.replace("${workspaceFolderBasename}",path.basename(workspace.rootPath));
+                    site.remotePath = this.expandVars(site.remotePath);
                 }
-            }
+            } 
 
             site.localPath = this.translatePath(site.localPath);
             site.remotePath = this.translatePath(site.remotePath);
@@ -131,6 +128,13 @@ export class Config {
         this.siteMap = siteMap;
 
         this.sites = sites;
+    }
+
+    expandVars(path: string) {
+        path = path.replace("${workspaceRoot}",this._workspaceFolder);
+        path = path.replace("${workspaceFolder}",this._workspaceFolder);
+        path = path.replace("${workspaceFolderBasename}",this._workspaceFolderBasename);
+        return path;
     }
 
     translatePath(path: string): string {
