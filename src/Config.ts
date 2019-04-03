@@ -90,14 +90,6 @@ export class Config {
 
         let workspaceLocal = workspace.rootPath
 
-        if (workspaceLocal !== undefined) {
-            workspaceLocal += path.sep;
-        } else {
-            workspaceLocal === null;
-        }
-
-        workspaceLocal = this.translatePath(workspaceLocal);
-        
         for(let site of sites) {
             if(site.localPath === null || site.localPath == "null") {
                 site.localPath = workspaceLocal;
@@ -108,8 +100,10 @@ export class Config {
                 for(let i = 0; i < site.options.length; i ++) {
                     const site_option = site.options[i];
                     for(let j = 0; j < site_option.length; j++ ) {
-                        const option = site_option[j];
-                        site_option[j] = option.replace("${workspaceRoot}",workspaceLocal);
+                        let option = site_option[j];
+                        option = option.replace("${workspaceRoot}",workspaceLocal);
+                        option = option.replace("${workspaceFolder}",workspaceLocal);
+                        site_option[j] = option;
                     }
                 }
 
@@ -121,6 +115,7 @@ export class Config {
             }
 
             site.localPath = this.translatePath(site.localPath);
+            site.remotePath = this.translatePath(site.remotePath);
             
             if(undefined != site.localPath && site.localPath[site.localPath.length - 1] != '/') site.localPath += '/';
             if(undefined != site.remotePath && site.remotePath[site.remotePath.length - 1] != '/') site.remotePath += '/';
