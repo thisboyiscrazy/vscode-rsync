@@ -431,7 +431,7 @@ export function activate(context: ExtensionContext): void {
     });
 
     workspace.onDidOpenTextDocument((doc: TextDocument): void => {
-        if (config.onFileLoadIndividual) {
+        if (config.onFileLoadIndividual && doc.uri.scheme == 'file') {
             syncFile(config, config.translatePath(doc.fileName), true);
         }
     });
