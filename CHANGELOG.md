@@ -5,6 +5,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Change Log
 
+### 0.34.8
+
+Ignore git:// files
+
 ### 0.34.7
 
 Refactored variable expansion
