@@ -5,6 +5,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Change Log
 
+### 0.35
+
+Added: preSyncUp, postSyncUp, preSyncDown, postSyncDown
+
 ### 0.34.8
 
 Ignore git:// files

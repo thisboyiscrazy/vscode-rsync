@@ -2,7 +2,7 @@
   "name": "sync-rsync",
   "displayName": "Sync-Rsync",
   "description": "Sync with remote using rsync",
-  "version": "0.34.8",
+  "version": "0.35",
   "publisher": "vscode-ext",
   "repository": {
     "type": "git",
@@ -289,6 +289,34 @@
               "afterSync": {
                 "type": "array",
                 "description": "a command to run after successful sync up",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "preSyncUp": {
+                "type": "array",
+                "description": "a command to before syncing up",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "postSyncUp": {
+                "type": "array",
+                "description": "a command to after syncing up",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "preSyncDown": {
+                "type": "array",
+                "description": "a command to before syncing down",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "postSyncDown": {
+                "type": "array",
+                "description": "a command to after syncing down",
                 "items": {
                   "type": "string"
                 }

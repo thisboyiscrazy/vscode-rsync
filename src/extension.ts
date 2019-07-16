@@ -93,10 +93,10 @@ const runSync = function (rsync: Rsync, paths: string[], site: Site, config: Con
     return execute(config, site.executable, rsync.args().concat(site.args).concat(paths), site.executableShell);
 };
 
-const runCommand = function (site: Site, config: Config): Promise<number> {
-    let command = site.afterSync[0];
-    let args = site.afterSync.slice(1);
-    return execute(config, command, args, site.executableShell);
+const runCommand = function (site: Site, config: Config, command: string[]): Promise<number> {
+    let _command = command[0];
+    let args = command.slice(1);
+    return execute(config, _command, args, site.executableShell);
 };
 
 const syncSite = async function (site: Site, config: Config, { down, dry }: { down: boolean, dry: boolean }): Promise<boolean> {
@@ -166,14 +166,31 @@ const syncSite = async function (site: Site, config: Config, { down, dry }: { do
         rsync = rsync.chmod(site.chmod);
     }
 
-    let rtn = await runSync(rsync, paths, site, config);
+    const runPrePost = async function(site: Site, config: Config, command: string[], tag:string): Promise<number> {
+        let rtn = await runCommand(site, config, command);
+        if (rtn != 0) {
+            vscWindow.showErrorMessage(tag + " return " + rtn);
+        }
+        return rtn;
+    }
+
+    let rtn: number = 0;
+    if(down) {
+        if(site.preSyncDown) rtn = await runPrePost(site, config, site.preSyncDown,"preSyncDown");
+    } else {
+        if(site.preSyncUp) rtn = await runPrePost(site, config, site.preSyncUp,"preSyncUp"); 
+    }
+
+    rtn = await runSync(rsync, paths, site, config);
+    
     if (rtn == 0) {
-        if (!down && site.afterSync) {
-            rtn = await runCommand(site, config);
-            if (rtn == 0) {
-                return true;
-            } else {
-                vscWindow.showErrorMessage("afterSync return " + rtn);
+        if(down) {
+            if(site.postSyncDown) rtn = await runPrePost(site, config, site.postSyncDown,"postSyncDown");
+        } else {
+            if(site.postSyncUp) rtn = await runPrePost(site, config, site.postSyncUp,"postSyncUp"); 
+            if(site.afterSync) {
+                rtn = await runPrePost(site, config, site.afterSync,"afterSync"); 
+                vscWindow.showInformationMessage("afterSync will be deprecated use postSyncUp");
             }
         }
         return true;

@@ -106,7 +106,10 @@ Sites have these options, they are all optional sync-rsync will use the defaults
 * `exclude`: rsync exclude patterns e.g. [".git",".vscode"] (includes happen before excludes) See [Includes / Excludes](#includes--excludes).
 * `include`: rsync exclude patterns e.g. ["*/","**/*.php] (includes happen before excludes) See [Includes / Excludes](#includes--excludes).
 * `shell`: Rsync's -e option e.g. ssh -p 1234.
-* `afterSync`: a command to run after successful sync up (e.g. clear cache). First item in array is the command the rest are arguments. e.g.  ['ssh','user@server','~/cr.sh'].
+* `preSyncUp`: a command to run before sync up (e.g. clear cache). First item in array is the command the rest are arguments. e.g.  ['ssh','user@server','~/cr.sh'].
+* `postSyncUp`: a command to run after successful sync up (e.g. clear cache). First item in array is the command the rest are arguments. e.g.  ['ssh','user@server','~/cr.sh'].
+* `preSyncDown`: a command to run before sync down (e.g. clear cache). First item in array is the command the rest are arguments. e.g.  ['ssh','user@server','~/cr.sh'].
+* `postSyncDown`: a command to run after successful sync down (e.g. clear cache). First item in array is the command the rest are arguments. e.g.  ['ssh','user@server','~/cr.sh'].
 * `chmod`: Rsync's --chmod option.
 * `options`: Array of extra rsync options, set each element using [rsync.set](https://github.com/mattijs/node-rsync#setoption-value). See [Extra Options](#extra-options).
 * `args`: Array of extra arguments to append to rsync e.g. ```["--exclude=venv/", "--include=*/", "--include=**/*.tpl", "--exclude=*"]```.

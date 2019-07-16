@@ -22,6 +22,10 @@ export class Site {
         public executableShell: string,
         public executable: string,
         public afterSync: string[],
+        public preSyncUp: string[],
+        public postSyncUp: string[],
+        public preSyncDown: string[],
+        public postSyncDown: string[],
         public options: Array<Array<string>>,
         public args: Array<string>
     ) {}
@@ -72,6 +76,10 @@ export class Config {
             config.get('shell', undefined),
             config.get('executableShell', undefined),
             config.get('executable', 'rsync'),
+            undefined,
+            undefined,
+            undefined,
+            undefined,
             undefined,
             config.get('options', []),
             config.get('args', []),
