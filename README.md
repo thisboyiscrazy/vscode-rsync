@@ -30,6 +30,8 @@ If using cygwin, cygpath maybe required.
 
 ## Extension Settings
 
+First you need to open your **settings.json** configs using `cmd+shift+p` or `ctrl+shift+p` and search `Open settings (JSON)` Or open your `.vscode/settings.json` file.
+
 Overall Settings (all optional):
 
 * `sync-rsync.notification`: Show notifiactions for sync successes (failurers always show notifications)
@@ -117,6 +119,8 @@ Sites have these options, they are all optional sync-rsync will use the defaults
 localPath and remotePath will replace ${workspaceRoot} with the current Workspace Path
 
 Example :
+
+**settings.json**
 
 ```javascript
 {
