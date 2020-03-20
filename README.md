@@ -30,7 +30,7 @@ If using cygwin, cygpath maybe required.
 
 ## Extension Settings
 
-First you need to open your **settings.json** configs using `cmd+shift+p` or `ctrl+shift+p` and search `Open settings (JSON)` Or open your `.vscode/settings.json` file.
+First you need to open your **settings.json** configs using `cmd+shift+p` or `ctrl+shift+p` and search `Open settings (JSON)` or open your `.vscode/settings.json` file. You can also get to your settings via the file menu. File > Preferences > Settings . For there you can change for user and workspace settings.
 
 Overall Settings (all optional):
 
