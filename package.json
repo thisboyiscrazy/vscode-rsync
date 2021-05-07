@@ -356,7 +356,7 @@
   },
   "dependencies": {
     "chokidar": "^2.0.4",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.21",
     "rsync": "^0.6.1",
     "util.promisify": "^1.0.0"
   }
