@@ -146,8 +146,8 @@ export class Config {
     }
 
     translatePath(path: string): string {
-        
-        if(path == null) return null;
+
+        if(!path) return null;
         
         if(path[0] == '/') return path;
 

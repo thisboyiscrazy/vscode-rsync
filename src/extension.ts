@@ -121,7 +121,7 @@ const syncSite = async function (site: Site, config: Config, { down, dry }: { do
     }
 
     if (site.remotePath === null) {
-        vscWindow.showErrorMessage('Sync-Rsync: you must configure a remote');
+        vscWindow.showErrorMessage('Sync-Rsync: you must configure a remote properly');
         return false;
     }
 
@@ -257,7 +257,7 @@ const syncFile = async function (config: Config, file: string, down: boolean): P
         }
 
         if (site.remotePath === null) {
-            vscWindow.showErrorMessage('Sync-Rsync: you must configure a remote');
+            vscWindow.showErrorMessage('Sync-Rsync: you must configure a remote properly');
             continue;
         }
 
